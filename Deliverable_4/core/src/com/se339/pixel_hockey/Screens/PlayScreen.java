@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -23,6 +24,7 @@ import com.se339.pixel_hockey.Sprites.Items.Item;
 import com.se339.pixel_hockey.Sprites.Items.ItemDef;
 import com.se339.pixel_hockey.Sprites.Items.Mushroom;
 import com.se339.pixel_hockey.Sprites.Mario;
+import com.se339.pixel_hockey.Stages.PlayStage;
 import com.se339.pixel_hockey.Tools.B2WorldCreator;
 import com.se339.pixel_hockey.Tools.WorldContactListener;
 
@@ -31,9 +33,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * Created by se339.pixel_hockey on 8/14/15.
  */
-public class PlayScreen implements Screen {
-    //Reference to our Game, used to set Screens
-    private PixelHockeyGame game;
+public class PlayScreen extends ScreenParent {
+
+
+
     private TextureAtlas atlas;
     public static boolean alreadyDestroyed = false;
 
@@ -62,9 +65,11 @@ public class PlayScreen implements Screen {
 
 
     public PlayScreen(PixelHockeyGame game){
+        super(game);
+        this.stage = new PlayStage();
+
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
 
-        this.game = game;
         //create cam used to follow mario through cam world
         gamecam = new OrthographicCamera();
 
@@ -101,6 +106,7 @@ public class PlayScreen implements Screen {
 
         items = new Array<Item>();
         itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
+
     }
 
     public void spawnItem(ItemDef idef){
@@ -131,15 +137,17 @@ public class PlayScreen implements Screen {
     public void handleInput(float dt){
         //control our player using immediate impulses
         if(player.currentState != Mario.State.DEAD) {
+
+
             if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
                 player.jump();
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2)
                 player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2)
                 player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
-
         }
 
+        //processLastAction();
     }
 
     public void update(float dt){
@@ -148,7 +156,7 @@ public class PlayScreen implements Screen {
         handleSpawningItems();
 
         //takes 1 step in the physics simulation(60 times per second)
-        world.step(1 / 60f, 6, 2);
+        //world.step(1 / 60f, 6, 2);
 
         player.update(dt);
         for(Enemy enemy : creator.getEnemies()) {
