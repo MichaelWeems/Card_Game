@@ -1,6 +1,5 @@
 package com.se339.pixel_hockey.Scenes;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -14,9 +13,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.se339.pixel_hockey.PixelHockeyGame;
 
 /**
- * Created by brentaureli on 8/17/15.
+ * Created by se339.pixel_hockey on 8/17/15.
  */
-public class Hud implements Disposable{
+public class Hud implements Disposable {
 
     //Scene2D.ui Stage and its own Viewport for HUD
     public Stage stage;
