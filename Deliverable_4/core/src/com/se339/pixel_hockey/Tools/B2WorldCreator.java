@@ -12,18 +12,18 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.pixel_hockey.Screens.PlayScreen;
-import com.se339.pixel_hockey.Sprites.Enemies.Enemy;
-import com.se339.pixel_hockey.Sprites.Enemies.Goomba;
-import com.se339.pixel_hockey.Sprites.Enemies.Turtle;
-import com.se339.pixel_hockey.Sprites.TileObjects.Brick;
-import com.se339.pixel_hockey.Sprites.TileObjects.Coin;
+import com.se339.pixel_hockey.Elements.Powerups.Powerup;
+import com.se339.pixel_hockey.Elements.Powerups.Speedboost;
+import com.se339.pixel_hockey.Elements.Powerups.Speeddown;
+import com.se339.pixel_hockey.Elements.TileObjects.Brick;
+import com.se339.pixel_hockey.Elements.TileObjects.Coin;
 
 /**
  * Created by se339.pixel_hockey on 8/28/15.
  */
 public class B2WorldCreator {
-    private Array<Goomba> goombas;
-    private Array<Turtle> turtles;
+    private Array<Speedboost> goombas;
+    private Array<Speeddown> turtles;
 
     public B2WorldCreator(PlayScreen screen){
         World world = screen.getWorld();
@@ -75,23 +75,23 @@ public class B2WorldCreator {
         }
 
         //create all goombas
-        goombas = new Array<Goomba>();
+        goombas = new Array<Speedboost>();
         for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            goombas.add(new Goomba(screen, rect.getX() / PixelHockeyGame.PPM, rect.getY() / PixelHockeyGame.PPM));
+            goombas.add(new Speedboost(screen, rect.getX() / PixelHockeyGame.PPM, rect.getY() / PixelHockeyGame.PPM));
         }
-        turtles = new Array<Turtle>();
+        turtles = new Array<Speeddown>();
         for(MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            turtles.add(new Turtle(screen, rect.getX() / PixelHockeyGame.PPM, rect.getY() / PixelHockeyGame.PPM));
+            turtles.add(new Speeddown(screen, rect.getX() / PixelHockeyGame.PPM, rect.getY() / PixelHockeyGame.PPM));
         }
     }
 
-    public Array<Goomba> getGoombas() {
+    public Array<Speedboost> getGoombas() {
         return goombas;
     }
-    public Array<Enemy> getEnemies(){
-        Array<Enemy> enemies = new Array<Enemy>();
+    public Array<Powerup> getEnemies(){
+        Array<Powerup> enemies = new Array<Powerup>();
         enemies.addAll(goombas);
         enemies.addAll(turtles);
         return enemies;

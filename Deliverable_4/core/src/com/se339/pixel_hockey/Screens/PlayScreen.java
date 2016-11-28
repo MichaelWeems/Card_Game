@@ -2,12 +2,10 @@ package com.se339.pixel_hockey.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -17,13 +15,13 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.se339.pixel_hockey.Camera.PlayCamera;
+import com.se339.pixel_hockey.Elements.Puck;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.pixel_hockey.Scenes.Hud;
-import com.se339.pixel_hockey.Sprites.Enemies.Enemy;
-import com.se339.pixel_hockey.Sprites.Items.Item;
-import com.se339.pixel_hockey.Sprites.Items.ItemDef;
-import com.se339.pixel_hockey.Sprites.Items.Mushroom;
-import com.se339.pixel_hockey.Sprites.Mario;
+import com.se339.pixel_hockey.Elements.Powerups.Powerup;
+import com.se339.pixel_hockey.Elements.Powerups.PowerupDef;
+import com.se339.pixel_hockey.Elements.Powerups.Speedup;
 import com.se339.pixel_hockey.Stages.PlayStage;
 import com.se339.pixel_hockey.Tools.B2WorldCreator;
 import com.se339.pixel_hockey.Tools.WorldContactListener;
@@ -35,14 +33,11 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class PlayScreen extends ScreenParent {
 
-
-
     private TextureAtlas atlas;
     public static boolean alreadyDestroyed = false;
 
     //basic playscreen variables
-    private OrthographicCamera gamecam;
-    private Viewport gamePort;
+    private PlayCamera playCam;
     private Hud hud;
 
     //Tiled map variables
@@ -56,12 +51,12 @@ public class PlayScreen extends ScreenParent {
     private B2WorldCreator creator;
 
     //sprites
-    private Mario player;
+    private Puck player;
 
     private Music music;
 
-    private Array<Item> items;
-    private LinkedBlockingQueue<ItemDef> itemsToSpawn;
+    private Array<Powerup> powerups;
+    private LinkedBlockingQueue<PowerupDef> powerupsToSpawn;
 
 
     public PlayScreen(PixelHockeyGame game){
@@ -71,10 +66,7 @@ public class PlayScreen extends ScreenParent {
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
 
         //create cam used to follow mario through cam world
-        gamecam = new OrthographicCamera();
-
-        //create a FitViewport to maintain virtual aspect ratio despite screen size
-        gamePort = new FitViewport(PixelHockeyGame.V_WIDTH / PixelHockeyGame.PPM, PixelHockeyGame.V_HEIGHT / PixelHockeyGame.PPM, gamecam);
+        playCam = new PlayCamera();
 
         //create our game HUD for scores/timers/level info
         hud = new Hud(game.batch);
@@ -85,7 +77,7 @@ public class PlayScreen extends ScreenParent {
         renderer = new OrthogonalTiledMapRenderer(map, 1  / PixelHockeyGame.PPM);
 
         //initially set our gamcam to be centered correctly at the start of of map
-        gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
+        playCam.getCamera().position.set(playCam.getViewport().getWorldWidth() / 2, playCam.getViewport().getWorldHeight() / 2, 0);
 
         //create our Box2D world, setting no gravity in X, -10 gravity in Y, and allow bodies to sleep
         world = new World(new Vector2(0, -10), true);
@@ -95,7 +87,7 @@ public class PlayScreen extends ScreenParent {
         creator = new B2WorldCreator(this);
 
         //create mario in our game world
-        player = new Mario(this);
+        player = new Puck(this);
 
         world.setContactListener(new WorldContactListener());
 
@@ -104,21 +96,21 @@ public class PlayScreen extends ScreenParent {
         music.setVolume(0.3f);
         //music.play();
 
-        items = new Array<Item>();
-        itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
+        powerups = new Array<Powerup>();
+        powerupsToSpawn = new LinkedBlockingQueue<PowerupDef>();
 
     }
 
-    public void spawnItem(ItemDef idef){
-        itemsToSpawn.add(idef);
+    public void spawnPowerups(PowerupDef idef){
+        powerupsToSpawn.add(idef);
     }
 
 
-    public void handleSpawningItems(){
-        if(!itemsToSpawn.isEmpty()){
-            ItemDef idef = itemsToSpawn.poll();
-            if(idef.type == Mushroom.class){
-                items.add(new Mushroom(this, idef.position.x, idef.position.y));
+    public void handleSpawningPowerups(){
+        if(!powerupsToSpawn.isEmpty()){
+            PowerupDef idef = powerupsToSpawn.poll();
+            if(idef.type == Speedup.class){
+                powerups.add(new Speedup(this, idef.position.x, idef.position.y));
             }
         }
     }
@@ -136,7 +128,7 @@ public class PlayScreen extends ScreenParent {
 
     public void handleInput(float dt){
         //control our player using immediate impulses
-        if(player.currentState != Mario.State.DEAD) {
+        if(player.currentState != Puck.State.DEAD) {
 
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
@@ -153,34 +145,20 @@ public class PlayScreen extends ScreenParent {
     public void update(float dt){
         //handle user input first
         handleInput(dt);
-        handleSpawningItems();
+        handleSpawningPowerups();
 
         //takes 1 step in the physics simulation(60 times per second)
         //world.step(1 / 60f, 6, 2);
 
         player.update(dt);
-        for(Enemy enemy : creator.getEnemies()) {
-            enemy.update(dt);
-            if(enemy.getX() < player.getX() + 224 / PixelHockeyGame.PPM) {
-                enemy.b2body.setActive(true);
-            }
-        }
 
-        for(Item item : items)
-            item.update(dt);
+        for(Powerup powerup : powerups)
+            powerup.update(dt);
 
         hud.update(dt);
 
-        //attach our gamecam to our players.x coordinate
-        if(player.currentState != Mario.State.DEAD) {
-            gamecam.position.x = player.b2body.getPosition().x;
-        }
-
-        //update our gamecam with correct coordinates after changes
-        gamecam.update();
         //tell our renderer to draw only what our camera can see in our game world.
-        renderer.setView(gamecam);
-
+        renderer.setView(playCam.getCamera());
     }
 
 
@@ -197,15 +175,15 @@ public class PlayScreen extends ScreenParent {
         renderer.render();
 
         //renderer our Box2DDebugLines
-        b2dr.render(world, gamecam.combined);
+        b2dr.render(world, playCam.getCamera().combined);
 
-        game.batch.setProjectionMatrix(gamecam.combined);
+        game.batch.setProjectionMatrix(playCam.getCamera().combined);
         game.batch.begin();
         player.draw(game.batch);
-        for (Enemy enemy : creator.getEnemies())
-            enemy.draw(game.batch);
-        for (Item item : items)
-            item.draw(game.batch);
+        for (Powerup powerup : creator.getEnemies())
+            powerup.draw(game.batch);
+        for (Powerup powerup : powerups)
+            powerup.draw(game.batch);
         game.batch.end();
 
         //Set our batch to now draw what the Hud camera sees.
@@ -220,7 +198,7 @@ public class PlayScreen extends ScreenParent {
     }
 
     public boolean gameOver(){
-        if(player.currentState == Mario.State.DEAD && player.getStateTimer() > 3){
+        if(player.currentState == Puck.State.DEAD && player.getStateTimer() > 3){
             return true;
         }
         return false;
@@ -229,7 +207,7 @@ public class PlayScreen extends ScreenParent {
     @Override
     public void resize(int width, int height) {
         //updated our game viewport
-        gamePort.update(width,height);
+        playCam.getViewport().update(width,height);
 
     }
 

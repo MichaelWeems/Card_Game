@@ -1,11 +1,11 @@
-package com.se339.pixel_hockey.Sprites.TileObjects;
+package com.se339.pixel_hockey.Elements.TileObjects;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.MapObject;
+import com.se339.pixel_hockey.Elements.Puck;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.pixel_hockey.Scenes.Hud;
 import com.se339.pixel_hockey.Screens.PlayScreen;
-import com.se339.pixel_hockey.Sprites.Mario;
 
 /**
  * Created by se339.pixel_hockey on 8/28/15.
@@ -18,8 +18,8 @@ public class Brick extends InteractiveTileObject {
     }
 
     @Override
-    public void onHeadHit(Mario mario) {
-        if(mario.isBig()) {
+    public void onHeadHit(Puck puck) {
+        if(puck.isBig()) {
             setCategoryFilter(PixelHockeyGame.DESTROYED_BIT);
             getCell().setTile(null);
             Hud.addScore(200);

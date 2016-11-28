@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class StageParent extends Stage {
 
+
+
     public StageParent(){
         super();
     }

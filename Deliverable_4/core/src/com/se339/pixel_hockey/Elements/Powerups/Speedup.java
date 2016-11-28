@@ -1,18 +1,18 @@
-package com.se339.pixel_hockey.Sprites.Items;
+package com.se339.pixel_hockey.Elements.Powerups;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.se339.pixel_hockey.Elements.Puck;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.pixel_hockey.Screens.PlayScreen;
-import com.se339.pixel_hockey.Sprites.Mario;
 
 /**
  * Created by se339.pixel_hockey on 9/24/15.
  */
-public class Mushroom extends Item {
-    public Mushroom(PlayScreen screen, float x, float y) {
+public class Speedup extends Powerup {
+    public Speedup(PlayScreen screen, float x, float y) {
         super(screen, x, y);
         setRegion(screen.getAtlas().findRegion("mushroom"), 0, 0, 16, 16);
         velocity = new Vector2(0.7f, 0);
@@ -40,9 +40,9 @@ public class Mushroom extends Item {
     }
 
     @Override
-    public void use(Mario mario) {
+    public void use(Puck puck) {
         destroy();
-        mario.grow();
+        puck.grow();
     }
 
     @Override

@@ -1,18 +1,18 @@
-package com.se339.pixel_hockey.Sprites.Items;
+package com.se339.pixel_hockey.Elements.Powerups;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.se339.pixel_hockey.Elements.Puck;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.pixel_hockey.Screens.PlayScreen;
-import com.se339.pixel_hockey.Sprites.Mario;
 
 /**
  * Created by se339.pixel_hockey on 9/24/15.
  */
-public abstract class Item extends Sprite {
+public abstract class Powerup extends Sprite {
     protected PlayScreen screen;
     protected World world;
     protected Vector2 velocity;
@@ -20,11 +20,13 @@ public abstract class Item extends Sprite {
     protected boolean destroyed;
     protected Body body;
 
-    public Item(PlayScreen screen, float x, float y){
+    public Powerup(PlayScreen screen, float x, float y){
         this.screen = screen;
         this.world = screen.getWorld();
         toDestroy = false;
         destroyed = false;
+
+        velocity = new Vector2(0, 0);
 
         setPosition(x, y);
         setBounds(getX(), getY(), 16 / PixelHockeyGame.PPM, 16 / PixelHockeyGame.PPM);
@@ -32,7 +34,7 @@ public abstract class Item extends Sprite {
     }
 
     public abstract void defineItem();
-    public abstract void use(Mario mario);
+    public abstract void use(Puck puck);
 
     public void update(float dt){
         if(toDestroy && !destroyed){

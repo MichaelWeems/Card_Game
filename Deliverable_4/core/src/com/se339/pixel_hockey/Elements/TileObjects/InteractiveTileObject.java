@@ -1,4 +1,4 @@
-package com.se339.pixel_hockey.Sprites.TileObjects;
+package com.se339.pixel_hockey.Elements.TileObjects;
 
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -14,7 +14,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.pixel_hockey.Screens.PlayScreen;
-import com.se339.pixel_hockey.Sprites.Mario;
+import com.se339.pixel_hockey.Elements.Puck;
 
 /**
  * Created by se339.pixel_hockey on 8/28/15.
@@ -51,7 +51,7 @@ public abstract class InteractiveTileObject {
 
     }
 
-    public abstract void onHeadHit(Mario mario);
+    public abstract void onHeadHit(Puck puck);
     public void setCategoryFilter(short filterBit){
         Filter filter = new Filter();
         filter.categoryBits = filterBit;
