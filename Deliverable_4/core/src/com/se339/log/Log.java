@@ -12,19 +12,31 @@ public class Log {
         this.screen = screen;
     }
 
+    /*
+     * Log an error
+     */
     public void e(String error){
-        String msg = "Error: " + error;
+        String msg = "\n** ERROR *********************************************\n";
+        msg +=       "\t" + error;
+        printerror(msg);
+    }
+
+    private void printerror(String msg){
         printlog(msg);
+        print("******************************************************\n");
     }
 
     /*
-     * Log code
+     * Log what code is executing
      */
     public void l(String log){
         String msg = "--" + log;
         printlog(msg);
     }
 
+    /*
+     * Log if an action is being taken
+     */
     public void a(String action){
         String msg = "-Taking Action: " + action;
         printlog(msg);
@@ -32,6 +44,10 @@ public class Log {
 
     private void printlog(String msg){
         msg += "\n\ton screen (" + screen + ")";
+        print(msg);
+    }
+
+    private void print(String msg){
         System.out.println(msg);
     }
 }

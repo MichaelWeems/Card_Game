@@ -1,4 +1,4 @@
-package com.se339.pixel_hockey;
+package com.se339.pixel_hockey.screens;
 
 /**
  * Created by Zach on 11/30/2016.
@@ -7,17 +7,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.se339.pixel_hockey.*;
 
-public class MainMenuScreen implements Screen {
-    final PixelHockeyGame game;
-    OrthographicCamera camera;
+import com.se339.pixel_hockey.PixelHockeyGame;
 
-    public MainMenuScreen(final PixelHockeyGame gam) {
-        game = gam;
+public class MainMenuScreen extends Screens {
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
-
+    public MainMenuScreen(PixelHockeyGame game) {
+        super(game);
     }
 
     @Override

@@ -1,11 +1,10 @@
-package com.se339.pixel_hockey;
+package com.se339.pixel_hockey.screens;
 
 /**
  * Created by Zach on 11/30/2016.
  */
-import java.util.ArrayList;
-import java.util.Iterator;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.se339.log.*;
 
 import com.badlogic.gdx.Gdx;
@@ -15,14 +14,14 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
+import com.se339.pixel_hockey.PixelHockeyGame;
+import com.se339.pixel_hockey.sounds.SoundHandler;
 
-public class GameScreen implements Screen {
+import java.util.ArrayList;
+
+public class GameScreen extends Screens {
 
     /********************************************************/
     /* Constants */
@@ -33,23 +32,17 @@ public class GameScreen implements Screen {
 
     private final String mDir = "music/";
     private ArrayList<String> musiclist = new ArrayList<String>();
-    private int music_index = 0;
     private final String music_firework = mDir + "Firework.wav";
     private final String music_harambe = mDir + "Harambe.mp3";
+
+    private int music_index = 0;
 
     private final String sDir = "sounds/";
     private final String sound_drop = sDir + "drop.wav";
 
-    private final int sHeight = 1920;
-    private final int sWidth = 1080;
-
     private int puckSize = 256;
     /* End Constants */
     /********************************************************/
-
-    Log log;
-
-    PixelHockeyGame game;
 
     Texture dropImage;
     Texture puckImage;
@@ -57,7 +50,6 @@ public class GameScreen implements Screen {
     Sound hitSound;
     Music gameMusic;
 
-    OrthographicCamera camera;
 
     Rectangle puck;
     //Array<Rectangle> raindrops;
@@ -65,8 +57,8 @@ public class GameScreen implements Screen {
     int dropsGathered;
 
 
-    public GameScreen(final PixelHockeyGame gam) {
-        this.game = gam;
+    public GameScreen(final PixelHockeyGame game) {
+        super(game);
 
         log = new Log("GameScreen");
 
@@ -77,18 +69,13 @@ public class GameScreen implements Screen {
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal(music_firework));
         gameMusic.setLooping(true);
 
-        // create the camera and the SpriteBatch
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, sHeight, sWidth);
-
         // create a Rectangle to logically represent the puck
         puck = new Rectangle();
         puck.x = sWidth / 2 - puckSize / 2; // center the puck horizontally
         puck.y = sHeight / 2 - puckSize / 2; // center the puck vertically
 
-        puck.width = 64;
-        puck.height = 64;
-
+        puck.width = puckSize;
+        puck.height = puckSize;
 
         musiclist.add(music_firework);
         musiclist.add(music_harambe);
@@ -113,7 +100,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        log.a("rendering screen");
 
         // clear the screen with a dark blue color. The
         // arguments to glClearColor are the red, green
@@ -141,20 +127,10 @@ public class GameScreen implements Screen {
         */
         game.batch.end();
 
-        log.l("checking for user input");
         // process user input
         if (Gdx.input.isTouched()) {
             log.l("user input == touch");
-            log.a("changing music");
-            gameMusic.stop();
-            gameMusic.dispose();
-
-            if (music_index == musiclist.size() - 1) music_index = 0;
-            else music_index++;
-
-            gameMusic = Gdx.audio.newMusic(Gdx.files.internal(musiclist.get(music_index)));
-            gameMusic.setLooping(true);
-            gameMusic.play();
+            changeMusic();
 
             log.a("moving puck");
             Vector3 touchPos = new Vector3();
@@ -162,7 +138,8 @@ public class GameScreen implements Screen {
             camera.unproject(touchPos);
             puck.x = touchPos.x - 64 / 2;
         }
-        log.l("checking user input == keypress");
+
+        //log.l("checking user input == keypress");
         if (Gdx.input.isKeyPressed(Keys.LEFT))
             puck.x -= 200 * Gdx.graphics.getDeltaTime();
         if (Gdx.input.isKeyPressed(Keys.RIGHT))
@@ -196,6 +173,41 @@ public class GameScreen implements Screen {
             }
         }
         */
+    }
+
+    private void movePuck(){
+        puck.y -= 200 * Gdx.graphics.getDeltaTime();
+        //if (puck.y + puckSize < 0)
+
+            /*
+        if (raindrop.overlaps(puck)) {
+            dropsGathered++;
+            hitSound.play();
+            iter.remove();
+        }
+        */
+    }
+
+    /*
+     * Changes the music to the next song in the playlist
+     */
+    private void changeMusic(){
+        log.a("changing music");
+
+        // make sure music object isn't null
+        if (gameMusic == null) return;
+        if (gameMusic.isPlaying()) {
+            gameMusic.stop();
+        }
+
+        // play first song if at end of playlist
+        if (music_index == musiclist.size() - 1) music_index = 0;
+        else music_index++;
+
+        // get the next song index from musiclist
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal(musiclist.get(music_index)));
+        gameMusic.setLooping(true);
+        gameMusic.play();
     }
 
     @Override
