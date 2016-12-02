@@ -27,5 +27,4 @@ public class PixelHockeyGame extends Game {
         batch.dispose();
         font.dispose();
     }
-
 }
