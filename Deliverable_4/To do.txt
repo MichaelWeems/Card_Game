@@ -1,0 +1,20 @@
+Game:
+	Puck physics
+	add walls
+	add stick
+	add player one
+	add player two
+	add goal
+	add powerups
+	add game engine
+		time limit
+		goal limit
+		winner/loser
+	
+Menu:
+	Find a game
+	Friends
+	Stats
+		file utilities
+	
+
