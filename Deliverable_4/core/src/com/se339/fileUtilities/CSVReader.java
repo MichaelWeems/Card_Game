@@ -1,4 +1,4 @@
-package com.se339.ui_elements;
+package com.se339.fileUtilities;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

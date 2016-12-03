@@ -1,5 +1,8 @@
 package com.se339.pixel_hockey.elements;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -21,18 +24,29 @@ public class Element {
     public Vector2 velocity;
     public Vector2 accel;
 
+    Texture tex;
+    Sprite sprite;
+    boolean drawSprite;
+    BitmapFont font;
+
+
     protected Log log;
 
     protected boolean dynamic = false;
 
     public Element() {
+        log = new Log("Element");
+
         this.body = null;
         velocity = new Vector2();
         accel = new Vector2();
-        log = new Log("Element");
+
+        font = new BitmapFont();
+        font.setColor(Color.BLACK);
+        drawSprite = false;
     }
 
-    protected BodyDef initBody(World world, Sprite sprite, float ptm){
+    protected BodyDef initBody(World world){
         BodyDef bodyDef = new BodyDef();
 
         if (dynamic)
@@ -40,8 +54,8 @@ public class Element {
         else
             bodyDef.type = BodyDef.BodyType.StaticBody;
 
-        bodyDef.position.set(PixelHockeyGame.pWidth / 2,
-                PixelHockeyGame.pHeight / 2);
+        bodyDef.position.set(PixelHockeyGame.getWidth() / 2,
+                PixelHockeyGame.getHeight() / 2);
 
         return bodyDef;
     }
@@ -54,6 +68,10 @@ public class Element {
     public boolean setVelocity(float xVel, float yVel){
         body.setLinearVelocity(xVel, yVel);
         return true;
+    }
+
+    public void dispose(){
+        tex.dispose();
     }
 
 }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.se339.fileUtilities.FileList;
 import com.se339.log.Log;
+import com.se339.pixel_hockey.physics.GameWorld;
 
 /**
  * Created by mweem_000 on 12/2/2016.
@@ -22,23 +23,23 @@ public class Wall extends Element {
 
     String imagefile = FileList.image_puck_blue;
 
-    public Wall(World world, Sprite sprite, float ptm) {
+    public Wall(World world) {
         super();
 
         log = new Log("Wall");
 
         this.body = world.createBody(
-                initBody(world, sprite, ptm));
+                initBody(world));
 
         BodyDef bodyDef2 = new BodyDef();
         bodyDef2.type = BodyDef.BodyType.StaticBody;
-        float w = Gdx.graphics.getWidth()/ptm;
+        float w = Gdx.graphics.getWidth() / GameWorld.PIXELS_TO_METERS;
         // Set the height to just 50 pixels above the bottom of the screen so we can see the edge in the
         // debug renderer
-        float h = Gdx.graphics.getHeight()/ptm- 50/ptm;
+        float h = Gdx.graphics.getHeight() / GameWorld.PIXELS_TO_METERS - 50 / GameWorld.PIXELS_TO_METERS;
 
-        log.l("Graphics width: " + Gdx.graphics.getWidth() + "\nGraphics Height: " + Gdx.graphics.getHeight());
-
+        log.v(Gdx.graphics.getWidth(), "Graphics width");
+        log.v(Gdx.graphics.getHeight(), "Graphics Height");
         //bodyDef2.position.set(0,
 //                h-10/PIXELS_TO_METERS);
 

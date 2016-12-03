@@ -23,21 +23,17 @@ public class GameWorld implements InputProcessor {
 
     Log log;
 
-    Sprite sprite;
-    Texture img;
-
     World world;
 
     Puck puck;
     Wall wall;
     Box2DDebugRenderer debugRenderer;
     Matrix4 debugMatrix;
-    BitmapFont font;
 
     float torque = 0.0f;
     boolean drawSprite = true;
 
-    final float PIXELS_TO_METERS = 100f;
+    public final static float PIXELS_TO_METERS = 100f;
 
     private float elapsed = 0;
 
@@ -45,20 +41,14 @@ public class GameWorld implements InputProcessor {
 
         log = new Log("GameWorld");
 
-        img = new Texture(FileList.image_puck_blue);
-
-        sprite = new Sprite(img);
-        sprite.setPosition(PixelHockeyGame.pWidth / 2, PixelHockeyGame.pHeight / 2);
-
         world = new World(new Vector2(0, 0f),true);
-        puck = new Puck(world, sprite, PIXELS_TO_METERS);
-        wall = new Wall(world, sprite, PIXELS_TO_METERS);
+        puck = new Puck(world);
+        wall = new Wall(world);
 
         Gdx.input.setInputProcessor(this);
 
         debugRenderer = new Box2DDebugRenderer();
-        font = new BitmapFont();
-        font.setColor(Color.BLACK);
+
     }
 
     public void render(OrthographicCamera camera, SpriteBatch batch) {
@@ -66,12 +56,7 @@ public class GameWorld implements InputProcessor {
         // Step the physics simulation forward at a rate of 60hz
         world.step(1f/60f, 6, 2);
 
-        puck.body.applyTorque(torque,true);
-
-        sprite.setPosition((puck.body.getPosition().x * PIXELS_TO_METERS) - sprite.
-                        getWidth()/2 ,
-                (puck.body.getPosition().y * PIXELS_TO_METERS) -sprite.getHeight()/2 );
-        sprite.setRotation((float)Math.toDegrees(puck.body.getAngle()));
+        puck.setPosition();
 
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -80,24 +65,14 @@ public class GameWorld implements InputProcessor {
         debugMatrix = batch.getProjectionMatrix().cpy().scale(PIXELS_TO_METERS,
                 PIXELS_TO_METERS, 0);
         batch.begin();
-
-        if(drawSprite)
-            batch.draw(sprite, sprite.getX(), sprite.getY(),sprite.getOriginX(),
-                    sprite.getOriginY(),
-                    sprite.getWidth(),sprite.getHeight(),sprite.getScaleX(),sprite.
-                            getScaleY(),sprite.getRotation());
-
-        font.draw(batch,
-                "Restitution: " + puck.body.getFixtureList().first().getRestitution(),
-                -Gdx.graphics.getWidth()/2,
-                Gdx.graphics.getHeight()/2 );
+        puck.drawPuck(batch);
         batch.end();
 
         debugRenderer.render(world, debugMatrix);
     }
 
     public void dispose() {
-        img.dispose();
+        puck.dispose();
         world.dispose();
     }
 
@@ -135,7 +110,7 @@ public class GameWorld implements InputProcessor {
             puck.body.setLinearVelocity(0f, 0f);
             puck.body.setAngularVelocity(0f);
             torque = 0f;
-            sprite.setPosition(0f,0f);
+            puck.setPosition(0f,0f);
             puck.body.setTransform(0f,0f,0f);
         }
 
