@@ -6,10 +6,10 @@ package com.se339.log;
 
 public class Log {
 
-    private String screen;
+    private String obj;
 
-    public Log(String screen){
-        this.screen = screen;
+    public Log(String obj){
+        this.obj= obj;
     }
 
     /*
@@ -43,7 +43,7 @@ public class Log {
     }
 
     private void printlog(String msg){
-        msg += "\n\ton screen (" + screen + ")";
+        msg += "\n\tin class (" + obj + ")";
         print(msg);
     }
 

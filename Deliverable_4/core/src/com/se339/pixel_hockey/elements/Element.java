@@ -1,4 +1,4 @@
-package com.se339.elements;
+package com.se339.pixel_hockey.elements;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
@@ -6,6 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.se339.log.Log;
+import com.se339.pixel_hockey.PixelHockeyGame;
 
 /**
  * Created by mweem_000 on 12/2/2016.
@@ -19,21 +21,27 @@ public class Element {
     public Vector2 velocity;
     public Vector2 accel;
 
-    public Element(World world, Sprite sprite, float ptm) {
+    protected Log log;
 
-        this.body = world.createBody(
-                initBody(world, sprite, ptm));
+    protected boolean dynamic = false;
 
+    public Element() {
+        this.body = null;
         velocity = new Vector2();
         accel = new Vector2();
+        log = new Log("Element");
     }
 
-    private BodyDef initBody(World world, Sprite sprite, float ptm){
+    protected BodyDef initBody(World world, Sprite sprite, float ptm){
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set((sprite.getX() + sprite.getWidth()/2) /
-                        ptm,
-                (sprite.getY() + sprite.getHeight()/2) / ptm);
+
+        if (dynamic)
+            bodyDef.type = BodyDef.BodyType.DynamicBody;
+        else
+            bodyDef.type = BodyDef.BodyType.StaticBody;
+
+        bodyDef.position.set(PixelHockeyGame.pWidth / 2,
+                PixelHockeyGame.pHeight / 2);
 
         return bodyDef;
     }
