@@ -1,6 +1,5 @@
 package com.se339.pixel_hockey.physics;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -14,11 +13,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.se339.elements.Puck;
-import com.se339.fileUtilities.FileList;
+import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
+import com.se339.pixel_hockey.elements.Puck;
+import com.se339.fileUtilities.FileList;
+import com.se339.pixel_hockey.elements.Wall;
 
 public class GameWorld implements InputProcessor {
+
+    Log log;
 
     Sprite sprite;
     Texture img;
@@ -26,7 +29,7 @@ public class GameWorld implements InputProcessor {
     World world;
 
     Puck puck;
-    Body bodyEdgeScreen;
+    Wall wall;
     Box2DDebugRenderer debugRenderer;
     Matrix4 debugMatrix;
     BitmapFont font;
@@ -40,46 +43,16 @@ public class GameWorld implements InputProcessor {
 
     public GameWorld() {
 
+        log = new Log("GameWorld");
+
         img = new Texture(FileList.image_puck_blue);
 
         sprite = new Sprite(img);
+        sprite.setPosition(PixelHockeyGame.pWidth / 2, PixelHockeyGame.pHeight / 2);
 
-        sprite.setPosition(-sprite.getWidth()/2,-sprite.getHeight()/2);
-
-        world = new World(new Vector2(0, -1f),true);
-
+        world = new World(new Vector2(0, 0f),true);
         puck = new Puck(world, sprite, PIXELS_TO_METERS);
-
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(sprite.getWidth()/2 / PIXELS_TO_METERS, sprite.getHeight()
-                /2 / PIXELS_TO_METERS);
-
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        fixtureDef.density = 0.1f;
-        fixtureDef.restitution = 0.5f;
-
-        puck.body.createFixture(fixtureDef);
-        shape.dispose();
-
-        BodyDef bodyDef2 = new BodyDef();
-        bodyDef2.type = BodyDef.BodyType.StaticBody;
-        float w = Gdx.graphics.getWidth()/PIXELS_TO_METERS;
-        // Set the height to just 50 pixels above the bottom of the screen so we can see the edge in the
-        // debug renderer
-        float h = Gdx.graphics.getHeight()/PIXELS_TO_METERS- 50/PIXELS_TO_METERS;
-        //bodyDef2.position.set(0,
-//                h-10/PIXELS_TO_METERS);
-        bodyDef2.position.set(0,0);
-        FixtureDef fixtureDef2 = new FixtureDef();
-
-        EdgeShape edgeShape = new EdgeShape();
-        edgeShape.set(-w/2,-h/2,w/2,-h/2);
-        fixtureDef2.shape = edgeShape;
-
-        bodyEdgeScreen = world.createBody(bodyDef2);
-        bodyEdgeScreen.createFixture(fixtureDef2);
-        edgeShape.dispose();
+        wall = new Wall(world, sprite, PIXELS_TO_METERS);
 
         Gdx.input.setInputProcessor(this);
 
@@ -188,6 +161,9 @@ public class GameWorld implements InputProcessor {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         puck.body.applyForce(1f,1f,screenX,screenY,true);
+
+        log.l("Screen TouchDown:\n\t\tx-coord: " + screenX + "\n\t\ty-coord: " + screenY);
+
         //puck.body.applyTorque(0.4f,true);
         return true;
     }
