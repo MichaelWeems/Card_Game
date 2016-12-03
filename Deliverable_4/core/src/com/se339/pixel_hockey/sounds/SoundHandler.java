@@ -1,6 +1,8 @@
 package com.se339.pixel_hockey.sounds;
 
 import com.badlogic.gdx.audio.Music;
+import com.se339.fileUtilities.Directory;
+import com.se339.fileUtilities.DirectoryList;
 
 import java.util.ArrayList;
 
@@ -11,17 +13,13 @@ import java.util.ArrayList;
 
 public class SoundHandler {
 
-    private final String mDir = "music/";
-    private ArrayList<String> musiclist = new ArrayList<String>();
-    private final String music_firework = mDir + "Firework.wav";
-    private final String music_harambe = mDir + "Harambe.mp3";
-
+    private ArrayList<String> musiclist;
     private int music_index = 0;
-
     private Music music;
 
     public SoundHandler(){
         //music = new Music();
+        musiclist = Directory.getFileNames(DirectoryList.dMusic);
     }
 
 

@@ -5,6 +5,9 @@ package com.se339.pixel_hockey.screens;
  */
 
 import com.badlogic.gdx.graphics.Texture;
+import com.se339.fileUtilities.Directory;
+import com.se339.fileUtilities.DirectoryList;
+import com.se339.fileUtilities.FileList;
 import com.se339.log.*;
 
 import com.badlogic.gdx.Gdx;
@@ -17,41 +20,30 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.se339.pixel_hockey.PixelHockeyGame;
+import com.se339.pixel_hockey.physics.GameWorld;
 import com.se339.pixel_hockey.sounds.SoundHandler;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class GameScreen extends Screens {
 
-    /********************************************************/
-    /* Constants */
-    private final String iDir = "images/";
-    private final String pDir = iDir + "puck_images/";
-    private final String image_puck_blue = pDir + "blue.png";
-    private final String image_puck_red = pDir + "red.png";
+    //private final ArrayList<String> image_pucks;
 
-    private final String mDir = "music/";
-    private ArrayList<String> musiclist = new ArrayList<String>();
-    private final String music_firework = mDir + "Firework.wav";
-    private final String music_harambe = mDir + "Harambe.mp3";
-
+    private final ArrayList<String> musiclist;
     private int music_index = 0;
 
-    private final String sDir = "sounds/";
-    private final String sound_drop = sDir + "drop.wav";
-
     private int puckSize = 256;
-    /* End Constants */
-    /********************************************************/
 
-    Texture dropImage;
-    Texture puckImage;
+    //Texture dropImage;
+    //Texture puckImage;
 
     Sound hitSound;
     Music gameMusic;
 
+    GameWorld world;
 
-    Rectangle puck;
+    //Rectangle puck;
     //Array<Rectangle> raindrops;
     long lastDropTime;
     int dropsGathered;
@@ -59,26 +51,29 @@ public class GameScreen extends Screens {
 
     public GameScreen(final PixelHockeyGame game) {
         super(game);
-
         log = new Log("GameScreen");
 
-        puckImage = new Texture(Gdx.files.internal(image_puck_blue));
+        world = new GameWorld();
+
+        //image_pucks = Directory.getFileNamesFullPath(DirectoryList.dImages_Puck);
+        musiclist = Directory.getFileNamesFullPath(DirectoryList.dMusic);
+
+        //log.a("Opening image: " + image_pucks.get(0));
+        //puckImage = new Texture(Gdx.files.internal(image_pucks.get(0)));
+        //log.l("\t\timage opened");
 
         // load the drop sound effect and the rain background "music"
-        hitSound = Gdx.audio.newSound(Gdx.files.internal(sound_drop));
-        gameMusic = Gdx.audio.newMusic(Gdx.files.internal(music_firework));
+        hitSound = Gdx.audio.newSound(Gdx.files.internal(FileList.sound_drop));
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal(musiclist.get(0)));
         gameMusic.setLooping(true);
 
         // create a Rectangle to logically represent the puck
-        puck = new Rectangle();
-        puck.x = sWidth / 2 - puckSize / 2; // center the puck horizontally
-        puck.y = sHeight / 2 - puckSize / 2; // center the puck vertically
+        //puck = new Rectangle();
+        //puck.x = sWidth / 2 - puckSize / 2; // center the puck horizontally
+        //puck.y = sHeight / 2 - puckSize / 2; // center the puck vertically
 
-        puck.width = puckSize;
-        puck.height = puckSize;
-
-        musiclist.add(music_firework);
-        musiclist.add(music_harambe);
+        //puck.width = puckSize;
+        //puck.height = puckSize;
 
         // create the raindrops array and spawn the first raindrop
         //raindrops = new Array<Rectangle>();
@@ -110,23 +105,25 @@ public class GameScreen extends Screens {
 
         // tell the camera to update its matrices.
         camera.update();
+        world.render(camera, game.batch);
 
         // tell the SpriteBatch to render in the
         // coordinate system specified by the camera.
-        game.batch.setProjectionMatrix(camera.combined);
+        //game.batch.setProjectionMatrix(camera.combined);
 
         // begin a new  batch and draw the puck and
         // all drops
-        game.batch.begin();
+        //game.batch.begin();
         //game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, 480);
-        game.batch.draw(puckImage, puck.x, puck.y);
+        //game.batch.draw(puckImage, puck.x, puck.y);
         /*
         for (Rectangle raindrop : raindrops) {
             game.batch.draw(dropImage, raindrop.x, raindrop.y);
         }
         */
-        game.batch.end();
+        //game.batch.end();
 
+        /*
         // process user input
         if (Gdx.input.isTouched()) {
             log.l("user input == touch");
@@ -176,7 +173,7 @@ public class GameScreen extends Screens {
     }
 
     private void movePuck(){
-        puck.y -= 200 * Gdx.graphics.getDeltaTime();
+        //puck.y -= 200 * Gdx.graphics.getDeltaTime();
         //if (puck.y + puckSize < 0)
 
             /*
@@ -235,8 +232,8 @@ public class GameScreen extends Screens {
 
     @Override
     public void dispose() {
-        dropImage.dispose();
-        puckImage.dispose();
+        //dropImage.dispose();
+        //puckImage.dispose();
         hitSound.dispose();
         gameMusic.dispose();
     }
