@@ -8,8 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.se339.fileUtilities.FileList;
 import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
+import com.se339.pixel_hockey.screens.FriendScreen;
 import com.se339.pixel_hockey.screens.GameScreen;
 import com.se339.pixel_hockey.screens.MainMenuScreen;
+import com.se339.pixel_hockey.screens.StatScreen;
 
 /**
  * Created by Zach on 12/3/2016.
@@ -83,13 +85,13 @@ public class Hud extends Table {
 
     public void setFriendScreen(){
         log.a("Relocating to friends page");
-        game.setScreen(new GameScreen(game));
+        game.setScreen(new FriendScreen(game));
         game.dispose();
     }
 
     public void setStatScreen(){
         log.a("Relocating to stat screen");
-        game.setScreen(new GameScreen(game));
+        game.setScreen(new StatScreen(game));
         game.dispose();
     }
 

@@ -16,34 +16,35 @@ import static com.badlogic.gdx.graphics.g2d.ParticleEmitter.SpawnShape.line;
 public class CSVReader {
 
     private String fileName;
-    private ArrayList<String[]> users;
+    private ArrayList<String[]> friends;
     private static String line = "";
     private static String split = ",";
 
-
-    public ArrayList<String[]> userInfo(String file){
-        fileName = file;
-        users = new ArrayList();
-
+    public CSVReader(String name){
+        fileName = name;
+        friends = new ArrayList();
         try  {
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            BufferedReader br = new BufferedReader(new FileReader(fileName));
             while ((line = br.readLine()) != null) {
 
                 // use comma as separator
                 String[] user = line.split(split);
-                users.add(user);
+                friends.add(user);
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return users;
+    }
+
+    public ArrayList<String[]> getFriends(){
+        return friends;
     }
 
     public void editInfo(String name, double win){
 
         double lose = 1 - win;
-        users = new ArrayList();
+        friends = new ArrayList();
         boolean newPlayer = true;
         try{
             BufferedReader br = new BufferedReader(new FileReader(fileName));
@@ -55,11 +56,11 @@ public class CSVReader {
                     temp = getStats(name, win, lose);
                     newPlayer = false;
                 }
-                users.add(temp);
+                friends.add(temp);
             }
             if(newPlayer){
                 String[] temp = getStats(name, win, lose);
-                users.add(temp);
+                friends.add(temp);
             }
             fileWrite();
         }catch(IOException e){
@@ -83,7 +84,7 @@ public class CSVReader {
     public void fileWrite(){
         try {
             FileWriter fw = new FileWriter(fileName);
-            for(String[] s:users){
+            for(String[] s:friends){
                 String temp = s[0]+","+s[1]+","+s[2]+","+s[3]+"\n";
                 fw.append(temp);
             }
