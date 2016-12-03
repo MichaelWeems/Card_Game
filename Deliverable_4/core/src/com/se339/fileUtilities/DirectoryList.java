@@ -14,4 +14,7 @@ public interface DirectoryList {
     public static final String dImages  = "images/";
     public static final String dImages_Puck  = "images/puck_images/";
 
+    //Files
+    public static final String dFiles = "files/";
+
 }

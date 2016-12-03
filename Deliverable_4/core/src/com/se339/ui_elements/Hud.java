@@ -9,6 +9,7 @@ import com.se339.fileUtilities.FileList;
 import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.pixel_hockey.screens.GameScreen;
+import com.se339.pixel_hockey.screens.MainMenuScreen;
 
 /**
  * Created by Zach on 12/3/2016.
@@ -26,9 +27,18 @@ public class Hud extends Table {
         buttonIcon friendIcon = new buttonIcon(FileList.image_friends_icon);
         buttonIcon statIcon = new buttonIcon(FileList.image_stat_icon);
         buttonIcon gameIcon = new buttonIcon(FileList.image_game_icon);
+        buttonIcon homeIcon = new buttonIcon(FileList.image_home_icon);
 
         log.a("adding to hud");
 //        hud = new Table();
+        ImageButton homeBtn = homeIcon.getBtn();
+        homeBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setHomePage();
+            }
+        });
+
         ImageButton friendBtn = friendIcon.getBtn();
         friendBtn.addListener(new ChangeListener(){
             public void changed (ChangeEvent event, Actor actor) {
@@ -42,6 +52,7 @@ public class Hud extends Table {
                 findGame();
             }
         });
+
         ImageButton statBtn = statIcon.getBtn();
         statBtn.addListener(new ChangeListener(){
             public void changed (ChangeEvent event, Actor actor) {
@@ -49,6 +60,7 @@ public class Hud extends Table {
             }
         });
 
+        this.add(homeBtn);
         this.add(friendBtn);
         this.add(gameBtn);
         this.add(statBtn);
@@ -62,6 +74,12 @@ public class Hud extends Table {
 //    public Table getTable(){
 //        return hud;
 //    }
+
+    public void setHomePage(){
+        log.a("Relocating to home page");
+        game.setScreen(new MainMenuScreen(game));
+        game.dispose();
+    }
 
     public void setFriendScreen(){
         log.a("Relocating to friends page");

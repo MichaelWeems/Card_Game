@@ -39,22 +39,6 @@ public class MainMenuScreen extends Screens {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-
-
-//        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
-//        style.up = skin.newDrawable("white", Color.LIGHT_GRAY);
-//        style.down = skin.newDrawable("white", Color.DARK_GRAY);
-////        style.imageOver = new TextureRegionDrawable(friendText);
-//        style.imageUp = new TextureRegionDrawable(gameText);
-//
-//        log.a("Creating image button and action listener");
-//        ImageButton friendBtn = new ImageButton(style);
-//        friendBtn.addListener(new ChangeListener(){
-//            public void changed (ChangeEvent event, Actor actor) {
-//                setFriendScreen();
-//            }
-//        });
-
         log.l("adding to Tile");
         Table title = new Table();
 
