@@ -80,19 +80,19 @@ public class Hud extends Table {
     public void setHomePage(){
         log.a("Relocating to home page");
         game.setScreen(new MainMenuScreen(game));
-        game.dispose();
+//        game.dispose();
     }
 
     public void setFriendScreen(){
         log.a("Relocating to friends page");
         game.setScreen(new FriendScreen(game));
-        game.dispose();
+//        game.dispose();
     }
 
     public void setStatScreen(){
         log.a("Relocating to stat screen");
         game.setScreen(new StatScreen(game));
-        game.dispose();
+//        game.dispose();
     }
 
     public void findGame(){

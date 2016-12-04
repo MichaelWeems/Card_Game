@@ -1,5 +1,9 @@
 package com.se339.fileUtilities;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.utils.Array;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -20,78 +24,46 @@ public class CSVReader {
     private static String line = "";
     private static String split = ",";
 
-    public CSVReader(String name){
-        fileName = name;
-        friends = new ArrayList();
-        try  {
-            BufferedReader br = new BufferedReader(new FileReader(fileName));
-            while ((line = br.readLine()) != null) {
-
-                // use comma as separator
-                String[] user = line.split(split);
-                friends.add(user);
+    public ArrayList<String> getFriends(){
+        ArrayList<String> arr = new ArrayList<String>();
+        Preferences pref = Gdx.app.getPreferences("Friend Info");
+        int i = 0;
+        boolean loop = true;
+        while(loop){
+            String temp = pref.getString("player"+i);
+            if(temp != null){
+                int win = pref.getInteger("win"+i);
+                int lose = pref.getInteger("lose"+i);
+                temp = temp+"\t"+win+"\t"+lose;
+                i++;
+                arr.add(temp);
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        return arr;
     }
 
-    public ArrayList<String[]> getFriends(){
-        return friends;
-    }
-
-    public void editInfo(String name, double win){
-
-        double lose = 1 - win;
-        friends = new ArrayList();
-        boolean newPlayer = true;
-        try{
-            BufferedReader br = new BufferedReader(new FileReader(fileName));
-            while((line = br.readLine()) != null){
-                String[] temp = line.split(split);
-                if(temp[0].equals(name)){
-                    win = Double.parseDouble(temp[1]) + win;
-                    lose = Double.parseDouble(temp[2]) + lose;
-                    temp = getStats(name, win, lose);
-                    newPlayer = false;
-                }
-                friends.add(temp);
-            }
-            if(newPlayer){
-                String[] temp = getStats(name, win, lose);
-                friends.add(temp);
-            }
-            fileWrite();
-        }catch(IOException e){
-            e.printStackTrace();
+    public void init(){
+        Preferences pref = Gdx.app.getPreferences("Friend Info");
+        int i = 30;
+        while(--i >= 0){
+            pref.putString("player"+i, "ztwild");
+            pref.putInteger("win", 4);
+            pref.putInteger("lose", 3);
         }
-
+        pref.flush();
     }
 
-    public String[] getStats(String name, double win, double lose){
-        DecimalFormat df = new DecimalFormat("0.##");
-        String[] temp = new String[4];
-        temp[0] = name;
-        temp[1] = Double.toString(win);
-        temp[2] = Double.toString(lose);
-        lose = Math.max(lose, 1);
-        double ratio = win/lose;
-        temp[3] = df.format(ratio);
-        return temp;
-    }
 
-    public void fileWrite(){
-        try {
-            FileWriter fw = new FileWriter(fileName);
-            for(String[] s:friends){
-                String temp = s[0]+","+s[1]+","+s[2]+","+s[3]+"\n";
-                fw.append(temp);
-            }
-            fw.flush();
-            fw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void shift(){
+        Preferences pref = Gdx.app.getPreferences("Friend Info");
+        for(int i = 0; i < 29; i++){
+            String name = pref.getString("player"+(i+1));
+            pref.putString("player"+i, name);
+            int win = pref.getInteger("win"+(i+1));
+            pref.putInteger("win"+i, win);
+            int lose = pref.getInteger("lose"+(i+1));
+            pref.putInteger("lose"+i, win);
+
         }
     }
 }

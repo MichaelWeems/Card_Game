@@ -26,6 +26,7 @@ public interface FileList {
 
     //files
     public static final String test_csv             = DirectoryList.dFiles + "test.csv";
+    public static final String name_txt             = DirectoryList.dFiles + "name.txt";
 
     //skin
     public static final String default_skin          = DirectoryList.dSkin + "uiskin.json";

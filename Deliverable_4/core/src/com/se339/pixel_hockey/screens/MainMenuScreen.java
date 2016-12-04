@@ -7,31 +7,86 @@ package com.se339.pixel_hockey.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.se339.fileUtilities.TXTReader;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.log.Log;
 import com.se339.ui_elements.Hud;
 
 public class MainMenuScreen extends Screens {
     Stage stage;
-
+    Log log = new Log("MainMenu Screen");
     public MainMenuScreen(PixelHockeyGame game) {
         super(game);
-        Log log = new Log("MainMenu Screen");
-
-
-        log.l("Creating Stage");
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
+        Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
 
         log.l("adding to Tile");
-        Table title = new Table();
+        final TXTReader txt = new TXTReader();
+        String name = txt.readName();
+        Table table = new Table();
+        Label titleLabel = new Label("Welcome To\nPixel Hockey", skin);
+        titleLabel.setFontScale(6,6);
+        table.add(titleLabel);
+        stage.addActor(table);
+        table.setSize(260, 195);
+        table.setPosition(400, 1500);
 
-        stage.addActor(title);
-        title.setSize(stage.getWidth(),120);
-        title.setPosition(0, 0.8f);
-        title.debug();
+        Table NameTable = new Table();
+        final Label nameLabel = new Label(name, skin);
+        NameTable.add(nameLabel);
+        nameLabel.setFontScale(4,4);
+        NameTable.row();
+        NameTable.row();
+        NameTable.row();
+
+        final TextField nameTxt = new TextField("", skin);
+        TextField.TextFieldStyle style = nameTxt.getStyle();
+        NameTable.add(nameTxt);
+        NameTable.row();
+        NameTable.row();
+        stage.addActor(NameTable);
+        NameTable.setSize(260, 195);
+        NameTable.setPosition(400, 1000);
+
+
+
+        // table.align(Align.right | Align.bottom);
+
+//        table.debug();
+
+        TextureRegion upRegion = skin.getRegion("default-slider-knob");
+        TextureRegion downRegion = skin.getRegion("default-slider-knob");
+        BitmapFont buttonFont = skin.getFont("default-font");
+
+        TextButton button = new TextButton("Change Name", skin);
+        button.getLabel().setFontScale(4,4);
+        button.addListener(new InputListener() {
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                log.a("Change name button clicked");
+                String name = nameTxt.getText();
+                if(name.length()> 0){
+                    txt.writeName(name);
+                    nameLabel.setText(name);
+                    nameTxt.setText("");
+                }
+                return true;
+            }
+        });
+        NameTable.add(button);
+
 
         log.l("Creating hud");
         Hud hud = new Hud(stage.getWidth(), game);
