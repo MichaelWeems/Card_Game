@@ -32,7 +32,7 @@ public class StatScreen extends Screens{
         stage.addActor(title);
         title.setSize(stage.getWidth(), 120);
         title.setPosition(0, 0.8f);
-        title.debug();
+//        title.debug();
 
         log.l("Creating hud");
         Hud hud = new Hud(stage.getWidth(), game);

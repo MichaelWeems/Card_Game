@@ -9,7 +9,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -18,8 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.se339.fileUtilities.TXTReader;
+import com.se339.fileUtilities.UserReader;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.log.Log;
 import com.se339.ui_elements.Hud;
@@ -34,8 +32,6 @@ public class MainMenuScreen extends Screens {
         Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
 
         log.l("adding to Tile");
-        final TXTReader txt = new TXTReader();
-        String name = txt.readName();
         Table table = new Table();
         Label titleLabel = new Label("Welcome To\nPixel Hockey", skin);
         titleLabel.setFontScale(6,6);
@@ -45,6 +41,8 @@ public class MainMenuScreen extends Screens {
         table.setPosition(400, 1500);
 
         Table NameTable = new Table();
+        final UserReader uReader = new UserReader();
+        String name = uReader.readName();
         final Label nameLabel = new Label(name, skin);
         NameTable.add(nameLabel);
         nameLabel.setFontScale(4,4);
@@ -78,7 +76,7 @@ public class MainMenuScreen extends Screens {
                 log.a("Change name button clicked");
                 String name = nameTxt.getText();
                 if(name.length()> 0){
-                    txt.writeName(name);
+                    uReader.writeName(name);
                     nameLabel.setText(name);
                     nameTxt.setText("");
                 }

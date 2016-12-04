@@ -5,10 +5,10 @@ import com.badlogic.gdx.Preferences;
 import com.se339.log.Log;
 
 /**
- * Created by Zach on 12/3/2016.
+ * Created by Zach on 12/4/2016.
  */
 
-public class TXTReader {
+public class UserReader {
     Log log = new Log("Starting txt reader");
 
     public void writeName(String name){

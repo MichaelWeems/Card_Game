@@ -70,7 +70,6 @@ public class Hud extends Table {
         this.setSize(width,120);
         this.setPosition(0, 0);
         this.setColor(Color.LIGHT_GRAY);
-        this.debug();
     }
 
 //    public Table getTable(){
