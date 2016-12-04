@@ -10,19 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.se339.fileUtilities.FileList;
 import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
-import com.se339.ui_elements.CSVReader;
+import com.se339.fileUtilities.CSVReader;
 import com.se339.ui_elements.Hud;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-
-import static com.badlogic.gdx.graphics.g2d.ParticleEmitter.SpawnShape.line;
 import static com.se339.fileUtilities.FileList.test_csv;
 
 /**

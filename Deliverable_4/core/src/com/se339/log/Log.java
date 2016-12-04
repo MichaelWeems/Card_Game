@@ -4,7 +4,7 @@ package com.se339.log;
  * Created by mweem_000 on 12/1/2016.
  */
 
-public class Log {
+public class Log<E> {
 
     private String obj;
 
@@ -26,12 +26,42 @@ public class Log {
         print("******************************************************\n");
     }
 
+
+
+
     /*
      * Log what code is executing
      */
     public void l(String log){
         String msg = "--" + log;
         printlog(msg);
+    }
+
+
+
+    public void v(E x, String xName){
+        String o = "" + x;
+        printv(o, xName);
+    }
+
+    public void o(Object obj, String oName){
+        String o = obj.toString();
+        printv(o, oName);
+    }
+/*
+    public void v(int x, String xName){
+        String o = "" + x;
+        printv(o, xName);
+    }
+
+    public void v(Object obj, String oName){
+        String o = obj.toString();
+        printv(o, oName);
+    }
+*/
+    private void printv(String o, String oName){
+        String msg = "-- Variable (" + oName + "):\n\t\t" + o;
+        print(msg);
     }
 
     /*

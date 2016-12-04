@@ -9,6 +9,7 @@ import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.ui_elements.Hud;
 
+
 /**
  * Created by Zach on 12/3/2016.
  */
@@ -73,5 +74,6 @@ public class StatScreen extends Screens{
     public void dispose() {
         stage.dispose();
 //        skin.dispose();
+
     }
 }

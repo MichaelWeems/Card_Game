@@ -37,10 +37,6 @@ public class MainMenuScreen extends Screens {
         Hud hud = new Hud(stage.getWidth(), game);
         stage.addActor(hud);
 
-
-
-
-
     }
 
     @Override
@@ -48,8 +44,6 @@ public class MainMenuScreen extends Screens {
         Gdx.gl.glClearColor(0.1f, 0.3f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.draw();
-
-
     }
 
 
