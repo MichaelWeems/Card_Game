@@ -22,4 +22,23 @@ public class UserReader {
         String name = pref.getString("name");
         return name;
     }
+
+    public int getWins(){
+        Preferences pref = Gdx.app.getPreferences("User Info");
+        int wins = pref.getInteger("wins");
+        return wins;
+    }
+
+    public int getLosses(){
+        Preferences pref = Gdx.app.getPreferences("User Info");
+        int losses = pref.getInteger("losses");
+        return losses;
+    }
+
+    //Can be uncompleted games such as a timed out game or disconnect
+    public int getTotalGames(){
+        Preferences pref = Gdx.app.getPreferences("User Info");
+        int games = pref.getInteger("games");
+        return games;
+    }
 }
