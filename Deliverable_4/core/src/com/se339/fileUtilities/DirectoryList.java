@@ -17,4 +17,7 @@ public interface DirectoryList {
     //Files
     public static final String dFiles = "files/";
 
+    //Skins Folder
+    public static final String dSkin = "data/";
+
 }
