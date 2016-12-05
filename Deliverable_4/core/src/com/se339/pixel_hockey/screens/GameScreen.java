@@ -5,6 +5,12 @@ package com.se339.pixel_hockey.screens;
  */
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.se339.fileUtilities.Directory;
 import com.se339.fileUtilities.DirectoryList;
 import com.se339.fileUtilities.FileList;
@@ -21,222 +27,249 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.se339.pixel_hockey.PixelHockeyGame;
-import com.se339.pixel_hockey.physics.GameWorld;
+import com.se339.pixel_hockey.input.InputHandler;
+import com.se339.pixel_hockey.sprites.Puck;
+import com.se339.pixel_hockey.sprites.Sprites;
+import com.se339.pixel_hockey.sprites.Stick;
 import com.se339.pixel_hockey.sounds.SoundHandler;
+import com.se339.pixel_hockey.world.ContactBits;
+import com.se339.pixel_hockey.world.WorldContactListener;
+import com.se339.pixel_hockey.world.WorldCreator;
 
 import java.io.File;
 import java.util.ArrayList;
 
 public class GameScreen extends Screens {
 
-    //private final ArrayList<String> image_pucks;
+    //Reference to our Game, used to set Screens
+    private PixelHockeyGame game;
+    public static boolean alreadyDestroyed = false;
 
-    private final ArrayList<String> musiclist;
-    private int music_index = 0;
+    //basic playscreen variables
+    private OrthographicCamera gamecam;
+    private Viewport gamePort;
 
-    private int puckSize = 256;
+    //Box2d variables
+    private World world;
+    private Box2DDebugRenderer b2dr;
+    private WorldCreator creator;
+    private float ppm;
 
-    //Texture dropImage;
-    //Texture puckImage;
+    //sprites
+    private ArrayList<Sprites> sprites;
+    private Stick player;
+    private Puck puck;
 
-    Sound hitSound;
-    Music gameMusic;
+    private Music music;
 
-    GameWorld world;
-
-    //Rectangle puck;
-    //Array<Rectangle> raindrops;
-    long lastDropTime;
-    int dropsGathered;
+//    private Array<Item> items;
+//    private LinkedBlockingQueue<ItemDef> itemsToSpawn;
 
 
-    public GameScreen(final PixelHockeyGame game) {
+    public GameScreen(PixelHockeyGame game){
         super(game);
+
         log = new Log("GameScreen");
 
-        world = new GameWorld();
+        this.game = game;
+        ppm = 100;
 
-        //image_pucks = Directory.getFileNamesFullPath(DirectoryList.dImages_Puck);
-        musiclist = Directory.getFileNamesFullPath(DirectoryList.dMusic);
+        //create cam used to follow mario through cam world
+        gamecam = new OrthographicCamera();
 
-        //log.a("Opening image: " + image_pucks.get(0));
-        //puckImage = new Texture(Gdx.files.internal(image_pucks.get(0)));
-        //log.l("\t\timage opened");
+        //create a FitViewport to maintain virtual aspect ratio despite screen size
+        gamePort = new FitViewport(PixelHockeyGame.getWidth() / ppm, PixelHockeyGame.getHeight() / ppm, gamecam);
+        //log.g(PixelHockeyGame.getWidth() / ppm, PixelHockeyGame.getHeight() / ppm, "GamePort Width", "GamePort Height", "Setting GamePort Dimensions");
 
-        // load the drop sound effect and the rain background "music"
-        hitSound = Gdx.audio.newSound(Gdx.files.internal(FileList.sound_drop));
-        gameMusic = Gdx.audio.newMusic(Gdx.files.internal(musiclist.get(0)));
-        gameMusic.setLooping(true);
+        //initially set our gamcam to be centered correctly at the start of of map
+        gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
+        //log.g(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, "GameCam X", "GameCam Y", "Setting Gamecam Position");
 
-        // create a Rectangle to logically represent the puck
-        //puck = new Rectangle();
-        //puck.x = sWidth / 2 - puckSize / 2; // center the puck horizontally
-        //puck.y = sHeight / 2 - puckSize / 2; // center the puck vertically
+        //create our Box2D world, setting no gravity in X, -10 gravity in Y, and allow bodies to sleep
+        world = new World(new Vector2(0, 0), false);
+        //allows for debug lines of our box2d world.
+        b2dr = new Box2DDebugRenderer();
+        creator = new WorldCreator(this);
 
-        //puck.width = puckSize;
-        //puck.height = puckSize;
+        //create mario in our game world
+        player = new Stick(this, ContactBits.PLAYER1, FileList.image_stick_blue);
+        puck = new Puck(this);
 
-        // create the raindrops array and spawn the first raindrop
-        //raindrops = new Array<Rectangle>();
-        //spawnRaindrop();
+        sprites = new ArrayList<Sprites>();
+        sprites.add(player);
+        sprites.add(puck);
 
+        world.setContactListener(new WorldContactListener());
+
+        Gdx.input.setInputProcessor(new InputHandler(this));
+
+
+//        music = MarioBros.manager.get("audio/music/mario_music.ogg", Music.class);
+//        music.setLooping(true);
+//        music.setVolume(0.3f);
+        //music.play();
+
+//        items = new Array<Item>();
+//        itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
     }
 
-    /*
-    private void spawnRaindrop() {
-        Rectangle raindrop = new Rectangle();
-        raindrop.x = MathUtils.random(0, 800 - 64);
-        raindrop.y = 480;
-        raindrop.width = 64;
-        raindrop.height = 64;
-        //raindrops.add(raindrop);
-        lastDropTime = TimeUtils.nanoTime();
+//    public void spawnItem(ItemDef idef){
+//        itemsToSpawn.add(idef);
+//    }
+
+
+//    public void handleSpawningItems(){
+//        if(!itemsToSpawn.isEmpty()){
+//            ItemDef idef = itemsToSpawn.poll();
+//            if(idef.type == Mushroom.class){
+//                items.add(new Mushroom(this, idef.position.x, idef.position.y));
+//            }
+//        }
+//    }
+
+    public Stick getPlayer(){
+        return player;
     }
-*/
-
-    @Override
-    public void render(float delta) {
-
-        // clear the screen with a dark blue color. The
-        // arguments to glClearColor are the red, green
-        // blue and alpha component in the range [0,1]
-        // of the color to be used to clear the screen.
-        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        // tell the camera to update its matrices.
-        camera.update();
-        world.render(camera, game.batch);
-
-        // tell the SpriteBatch to render in the
-        // coordinate system specified by the camera.
-        //game.batch.setProjectionMatrix(camera.combined);
-
-        // begin a new  batch and draw the puck and
-        // all drops
-        //game.batch.begin();
-        //game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, 480);
-        //game.batch.draw(puckImage, puck.x, puck.y);
-        /*
-        for (Rectangle raindrop : raindrops) {
-            game.batch.draw(dropImage, raindrop.x, raindrop.y);
-        }
-        */
-        //game.batch.end();
-
-        /*
-        // process user input
-        if (Gdx.input.isTouched()) {
-            log.l("user input == touch");
-            changeMusic();
-
-            log.a("moving puck");
-            Vector3 touchPos = new Vector3();
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            camera.unproject(touchPos);
-            puck.x = touchPos.x - 64 / 2;
-        }
-
-        //log.l("checking user input == keypress");
-        if (Gdx.input.isKeyPressed(Keys.LEFT))
-            puck.x -= 200 * Gdx.graphics.getDeltaTime();
-        if (Gdx.input.isKeyPressed(Keys.RIGHT))
-            puck.x += 200 * Gdx.graphics.getDeltaTime();
-
-        // make sure the puck stays within the screen bounds
-        if (puck.x < 0)
-            puck.x = 0;
-        if (puck.x > sWidth - 64)
-            puck.x = sWidth - 64;
-
-        /*
-        // check if we need to create a new raindrop
-        if (TimeUtils.nanoTime() - lastDropTime > 1000000000)
-            spawnRaindrop();
-
-
-        // move the raindrops, remove any that are beneath the bottom edge of
-        // the screen or that hit the puck. In the later case we play back
-        // a sound effect as well.
-        Iterator<Rectangle> iter = raindrops.iterator();
-        while (iter.hasNext()) {
-            Rectangle raindrop = iter.next();
-            raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
-            if (raindrop.y + 64 < 0)
-                iter.remove();
-            if (raindrop.overlaps(puck)) {
-                dropsGathered++;
-                hitSound.play();
-                iter.remove();
-            }
-        }
-        */
-    }
-
-    private void movePuck(){
-        //puck.y -= 200 * Gdx.graphics.getDeltaTime();
-        //if (puck.y + puckSize < 0)
-
-            /*
-        if (raindrop.overlaps(puck)) {
-            dropsGathered++;
-            hitSound.play();
-            iter.remove();
-        }
-        */
-    }
-
-    /*
-     * Changes the music to the next song in the playlist
-     */
-    private void changeMusic(){
-        log.a("changing music");
-
-        // make sure music object isn't null
-        if (gameMusic == null) return;
-        if (gameMusic.isPlaying()) {
-            gameMusic.stop();
-        }
-
-        // play first song if at end of playlist
-        if (music_index == musiclist.size() - 1) music_index = 0;
-        else music_index++;
-
-        // get the next song index from musiclist
-        gameMusic = Gdx.audio.newMusic(Gdx.files.internal(musiclist.get(music_index)));
-        gameMusic.setLooping(true);
-        gameMusic.play();
-    }
-
-    @Override
-    public void resize(int width, int height) {
+    public Puck getPuck() { return puck; }
+    public float[] getPuckPosition() {
+        float xy[] = {0,0};
+        xy[0] =  puck.body.getPosition().x;
+        xy[1] =  puck.body.getPosition().y;
+        return xy;
     }
 
     @Override
     public void show() {
-        // start the playback of the background music
-        // when the screen is shown
-        gameMusic.play();
+
+
+    }
+
+//    public void handleInput(float dt){
+//        //control our player using immediate impulses
+//        if(player.currentState != Mario.State.DEAD) {
+//            if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
+//                player.jump();
+//            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2)
+//                player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
+//            if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2)
+//                player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
+//            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+//                player.fire();
+//        }
+//
+//    }
+
+    public void update(float dt){
+        //handle user input first
+        //handleInput(dt);
+        //handleSpawningItems();
+
+        //takes 1 step in the physics simulation(60 times per second)
+        //world.step(1 / 120f, 6, 2);
+        world.step(dt, 6, 2);
+        player.update(dt);
+        puck.update(dt);
+//        for(Enemy enemy : creator.getEnemies()) {
+//            enemy.update(dt);
+//            if(enemy.getX() < player.getX() + 224 / MarioBros.PPM) {
+//                enemy.b2body.setActive(true);
+//            }
+//        }
+
+//        for(Item item : items)
+//            item.update(dt);
+//
+//        hud.update(dt);
+
+        //update our gamecam with correct coordinates after changes
+        gamecam.update();
+    }
+
+
+    @Override
+    public void render(float delta) {
+        //separate our update logic from render
+        update(delta);
+
+        //Clear the game screen with Black
+        Gdx.gl.glClearColor(0, 0, 0, 0);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        //renderer our Box2DDebugLines
+        b2dr.render(world, gamecam.combined);
+
+        game.batch.setProjectionMatrix(gamecam.combined);
+        game.batch.begin();
+        for (Sprites s : sprites)
+            s.draw(game.batch);
+//        player.draw(game.batch);
+//        puck.draw(game.batch);
+//        for (Enemy enemy : creator.getEnemies())
+//            enemy.draw(game.batch);
+//        for (Item item : items)
+//            item.draw(game.batch);
+        game.batch.end();
+
+        //Set our batch to now draw what the Hud camera sees.
+        //game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+//        hud.stage.draw();
+
+        if(gameOver()){
+            game.setScreen(new MainMenuScreen(game));
+            dispose();
+        }
+
+    }
+
+    public boolean gameOver(){
+//        if(player.currentState == Mario.State.DEAD && player.getStateTimer() > 3){
+//            return true;
+//        }
+        return false;
     }
 
     @Override
-    public void hide() {
+    public void resize(int width, int height) {
+        //updated our game viewport
+        gamePort.update(width,height);
+
+    }
+
+    public World getWorld(){
+        return world;
     }
 
     @Override
     public void pause() {
+
     }
 
     @Override
     public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
     }
 
     @Override
     public void dispose() {
-        //dropImage.dispose();
-        //puckImage.dispose();
-        hitSound.dispose();
-        gameMusic.dispose();
+        //dispose of all our opened resources
+//        map.dispose();
+//        renderer.dispose();
+        world.dispose();
+        b2dr.dispose();
+//        hud.dispose();
+    }
+
+    public float getPPM(){
+        return ppm;
+    }
+
+    public ArrayList<Sprites> getSprites(){
+        return sprites;
     }
 
 }

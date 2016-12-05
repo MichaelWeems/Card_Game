@@ -21,6 +21,8 @@ public class Screens implements Screen {
 
     public Screens(PixelHockeyGame game){
         this.game = game;
+        log = new Log("Screens");
+
 
         // create the camera and the SpriteBatch
         camera = new OrthographicCamera();

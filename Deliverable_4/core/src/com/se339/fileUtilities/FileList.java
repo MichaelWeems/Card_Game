@@ -14,6 +14,11 @@ public interface FileList {
     public static final String image_puck_yellow    = DirectoryList.dImages_Puck + "yellow.png";
     public static final String image_puck_green     = DirectoryList.dImages_Puck + "green.png";
 
+    // stick images
+    public static final String image_stick_blue      = DirectoryList.dImages_Stick + "blue.png";
+    public static final String image_stick_red       = DirectoryList.dImages_Stick + "red.png";
+    public static final String image_stick_yellow    = DirectoryList.dImages_Stick + "yellow.png";
+    public static final String image_stick_green     = DirectoryList.dImages_Stick + "green.png";
 
     // sounds
     public static final String sound_drop           = DirectoryList.dSounds + "drop.wav";

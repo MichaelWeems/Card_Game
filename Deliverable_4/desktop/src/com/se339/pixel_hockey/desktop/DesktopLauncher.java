@@ -11,7 +11,7 @@ public class DesktopLauncher {
 		config.title = "Pixel Hockey";
 		config.width = 3200;
 		config.height = 1800;
-		config.fullscreen = true;
+		config.fullscreen = false;
 
 		new LwjglApplication(new PixelHockeyGame(), config);
 	}

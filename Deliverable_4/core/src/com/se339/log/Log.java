@@ -27,22 +27,34 @@ public class Log<E> {
     }
 
 
+    public void d(){
+        print("--------------------------------------------------------------------------------");
+    }
+
+    public void g(E x, E y, String xName, String yName, String log){
+        d();
+        String o = "" + x;
+        String p = "" + y;
+        print("\tVariable (" + xName + "): " + o);
+        print("\tVariable (" + yName + "): " + p);
+        l(log);
+        print();
+    }
 
 
     /*
      * Log what code is executing
      */
     public void l(String log){
-        String msg = "--" + log;
+        String msg = "--\t" + log;
         printlog(msg);
     }
-
-
 
     public void v(E x, String xName){
         String o = "" + x;
         printv(o, xName);
     }
+
 
     public void o(Object obj, String oName){
         String o = obj.toString();
@@ -73,11 +85,12 @@ public class Log<E> {
     }
 
     private void printlog(String msg){
-        msg += "\n\tin class (" + obj + ")";
+        msg += "\n\t\tin class (" + obj + ")";
         print(msg);
     }
 
     private void print(String msg){
         System.out.println(msg);
     }
+    private void print(){System.out.println();}
 }
