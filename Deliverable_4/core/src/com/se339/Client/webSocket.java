@@ -56,7 +56,7 @@ public class WebSocket {
         try{
             String message = in.readLine();
             if(message.equals("startGame")){
-                game.setScreen(new GameScreen(game, this));
+                game.setScreen(new GameScreen(game));
             }
         }catch(IOException e){
             l.e("Cannot get Response");

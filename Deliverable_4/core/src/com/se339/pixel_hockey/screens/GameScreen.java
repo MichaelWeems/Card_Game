@@ -87,7 +87,10 @@ public class GameScreen extends Screens {
         // create all sprites
         player = new Player(this,  FileList.image_stick_blue, ContactBits.PLAYER1);
         puck = new Puck(this);
-        usergoal = new Goal(this, FileList.image_goal_user, (PixelHockeyGame.getWidth() / 2) / ppm, (PixelHockeyGame.getHeight() / 8) / ppm);
+        usergoal = new Goal(this, FileList.image_goal_user,
+                (PixelHockeyGame.getWidth() / 2) / ppm, (PixelHockeyGame.getHeight() / 8) / ppm);
+        oppgoal = new Goal(this, FileList.image_goal_opp,
+                (PixelHockeyGame.getWidth() / 2) / ppm, (7 * PixelHockeyGame.getHeight() / 8) / ppm);
 
         sprites = new ArrayList<Sprites>();
         sprites.add(player);

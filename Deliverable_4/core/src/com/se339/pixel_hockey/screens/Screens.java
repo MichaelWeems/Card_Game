@@ -11,56 +11,38 @@ import com.se339.pixel_hockey.PixelHockeyGame;
 
 public class Screens implements Screen {
 
-    PixelHockeyGame game;
-    OrthographicCamera camera;
+    public PixelHockeyGame game;
+    protected OrthographicCamera camera;
 
-    protected final int sHeight = 1920;
-    protected final int sWidth = 1080;
-
-    Log log;
+    protected Log log;
 
     public Screens(PixelHockeyGame game){
         this.game = game;
         log = new Log("Screens");
 
-
-        // create the camera and the SpriteBatch
+        // create the camera
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, sHeight, sWidth);
+        camera.setToOrtho(false, PixelHockeyGame.getWidth(), PixelHockeyGame.getHeight());
     }
 
     @Override
-    public void show() {
-
-    }
+    public void show() {}
 
     @Override
-    public void render(float delta) {
-
-    }
+    public void render(float delta) {}
 
     @Override
-    public void resize(int width, int height) {
-
-    }
+    public void resize(int width, int height) {}
 
     @Override
-    public void pause() {
-
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() {}
 
     @Override
-    public void hide() {
-
-    }
+    public void hide() {}
 
     @Override
-    public void dispose() {
-
-    }
+    public void dispose() {}
 }

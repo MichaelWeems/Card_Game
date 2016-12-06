@@ -10,6 +10,7 @@ import com.se339.fileUtilities.FileList;
 import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.pixel_hockey.screens.FriendScreen;
+import com.se339.pixel_hockey.screens.GameScreen;
 import com.se339.pixel_hockey.screens.MainMenuScreen;
 import com.se339.pixel_hockey.screens.SearchScreen;
 import com.se339.pixel_hockey.screens.StatScreen;
@@ -76,10 +77,7 @@ public class Hud extends Table {
         this.setPosition(0, 0);
         this.setColor(Color.LIGHT_GRAY);
     }
-
-//    public Table getTable(){
-//        return hud;
-//    }
+    
 
     public void setHomePage(){
         log.a("Relocating to home page");
