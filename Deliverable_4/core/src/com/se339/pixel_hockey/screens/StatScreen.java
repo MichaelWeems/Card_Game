@@ -1,16 +1,10 @@
 package com.se339.pixel_hockey.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.se339.Client.WebSocket;
 import com.se339.fileUtilities.UserReader;
 import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
-import com.se339.ui_elements.Hud;
 
 
 /**

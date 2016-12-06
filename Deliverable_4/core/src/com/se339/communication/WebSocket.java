@@ -1,4 +1,4 @@
-package com.se339.Client;
+package com.se339.communication;
 
 import com.badlogic.gdx.math.Vector2;
 import com.se339.log.Log;
@@ -23,7 +23,7 @@ public class WebSocket {
     private Log l;
 
     public WebSocket(){
-        l = new Log("WebSocket class");
+        l = new Log("WebSocket");
         try {
             socketConnect();
         } catch (UnknownHostException e) {
@@ -74,5 +74,9 @@ public class WebSocket {
 
     public void sendMove(Vector2 velocity){
         out.println(velocity+"&");
+    }
+
+    public void sendGoal(){
+        out.println("Goal&");
     }
 }

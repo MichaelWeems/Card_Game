@@ -1,4 +1,4 @@
-package com.se339.ui_elements;
+package com.se339.pixel_hockey.screens.ui_elements;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;

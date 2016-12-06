@@ -13,17 +13,26 @@ import com.se339.pixel_hockey.world.ContactBits;
 
 public class Goal extends Sprites {
 
+    /*
+     * Construct a new Goal
+     */
     public Goal(GameScreen screen, String image, float x, float y) {
         super(screen, image);
         init(x,y);
     }
 
+    /*
+     * Initialize the Goal variables
+     */
     private void init(float x, float y){
         log = new Log("Goal");
         initSprite(x, y, 150 / screen.getPPM(), false);
         defineGoal();
     }
 
+    /*
+     * Define the goal body
+     */
     private void defineGoal(){
         if (body != null) world.destroyBody(body);
         defineBody();
@@ -60,6 +69,9 @@ public class Goal extends Sprites {
 //        body.createFixture(fdef).setUserData(this);
     }
 
+    /*
+     * Return the regiion that the goal occupies
+     */
     public float[] getRegion(){
         float reg[] = {0,0,0,0};
         reg[0] = body.getWorldCenter().x - size;

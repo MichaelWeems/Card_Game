@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.se339.Client.WebSocket;
 import com.se339.fileUtilities.FileList;
 import com.se339.log.*;
 
@@ -17,7 +16,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.se339.Client.GameValues;
+import com.se339.communication.GameValues;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.pixel_hockey.input.InputHandler;
 import com.se339.pixel_hockey.sprites.Goal;
@@ -25,7 +24,6 @@ import com.se339.pixel_hockey.sprites.Player;
 import com.se339.pixel_hockey.sprites.Puck;
 import com.se339.pixel_hockey.sprites.Sprites;
 import com.se339.pixel_hockey.world.ContactBits;
-import com.se339.pixel_hockey.world.WorldCreator;
 
 import java.util.ArrayList;
 
@@ -43,7 +41,6 @@ public class GameScreen extends Screens {
     //Box2d variables
     private World world;
     private Box2DDebugRenderer b2dr;
-    private WorldCreator creator;
     private float ppm;
 
     //sprites
@@ -59,7 +56,7 @@ public class GameScreen extends Screens {
 //    private LinkedBlockingQueue<ItemDef> itemsToSpawn;
 
 
-    public GameScreen(PixelHockeyGame game){
+    public GameScreen(PixelHockeyGame game) {
         super(game);
 
         log = new Log("GameScreen");
@@ -82,10 +79,9 @@ public class GameScreen extends Screens {
         world = new World(new Vector2(0, 0), false);
         //allows for debug lines of our box2d world.
         b2dr = new Box2DDebugRenderer();
-        creator = new WorldCreator(this);
 
         // create all sprites
-        player = new Player(this,  FileList.image_stick_blue, ContactBits.PLAYER1);
+        player = new Player(this, FileList.image_stick_blue, ContactBits.PLAYER1);
         puck = new Puck(this);
         usergoal = new Goal(this, FileList.image_goal_user,
                 (PixelHockeyGame.getWidth() / 2) / ppm, (PixelHockeyGame.getHeight() / 8) / ppm);
@@ -97,35 +93,11 @@ public class GameScreen extends Screens {
         sprites.add(puck);
         sprites.add(usergoal);
 
-        //world.setContactListener(new WorldContactListener());
-
         Gdx.input.setInputProcessor(new InputHandler(this));
         gvalues = new GameValues("p1name", "p2name",
                 puck.body.getPosition().x, puck.body.getPosition().y);
 
-
-//        music = MarioBros.manager.get("audio/music/mario_music.ogg", Music.class);
-//        music.setLooping(true);
-//        music.setVolume(0.3f);
-        //music.play();
-
-//        items = new Array<Item>();
-//        itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
     }
-
-//    public void spawnItem(ItemDef idef){
-//        itemsToSpawn.add(idef);
-//    }
-
-
-//    public void handleSpawningItems(){
-//        if(!itemsToSpawn.isEmpty()){
-//            ItemDef idef = itemsToSpawn.poll();
-//            if(idef.type == Mushroom.class){
-//                items.add(new Mushroom(this, idef.position.x, idef.position.y));
-//            }
-//        }
-//    }
 
     public Player getPlayer(){
         return player;
@@ -139,31 +111,7 @@ public class GameScreen extends Screens {
         return xy;
     }
 
-    @Override
-    public void show() {
-
-
-    }
-
-//    public void handleInput(float dt){
-//        //control our player using immediate impulses
-//        if(player.currentState != Mario.State.DEAD) {
-//            if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
-//                player.jump();
-//            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2)
-//                player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
-//            if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2)
-//                player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
-//            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
-//                player.fire();
-//        }
-//
-//    }
-
     public void update(float dt){
-        //handle user input first
-        //handleInput(dt);
-        //handleSpawningItems();
 
         //takes 1 step in the physics simulation(60 times per second)
         //world.step(1 / 120f, 6, 2);
@@ -171,19 +119,6 @@ public class GameScreen extends Screens {
         for (Sprites s : sprites)
             s.update(dt);
 
-//        for(Enemy enemy : creator.getEnemies()) {
-//            enemy.update(dt);
-//            if(enemy.getX() < player.getX() + 224 / MarioBros.PPM) {
-//                enemy.b2body.setActive(true);
-//            }
-//        }
-
-//        for(Item item : items)
-//            item.update(dt);
-//
-//        hud.update(dt);
-
-        //update our gamecam with correct coordinates after changes
         gamecam.update();
     }
 
@@ -204,17 +139,8 @@ public class GameScreen extends Screens {
         game.batch.begin();
         for (Sprites s : sprites)
             s.draw(game.batch);
-//        player.draw(game.batch);
-//        puck.draw(game.batch);
-//        for (Enemy enemy : creator.getEnemies())
-//            enemy.draw(game.batch);
-//        for (Item item : items)
-//            item.draw(game.batch);
-        game.batch.end();
 
-        //Set our batch to now draw what the Hud camera sees.
-        //game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-//        hud.stage.draw();
+        game.batch.end();
 
         if(gameOver()){
             game.setScreen(new MainMenuScreen(game));
@@ -224,9 +150,6 @@ public class GameScreen extends Screens {
     }
 
     public boolean gameOver(){
-//        if(player.currentState == Mario.State.DEAD && player.getStateTimer() > 3){
-//            return true;
-//        }
         return false;
     }
 
@@ -234,36 +157,17 @@ public class GameScreen extends Screens {
     public void resize(int width, int height) {
         //updated our game viewport
         gamePort.update(width,height);
-
-    }
-
-    public World getWorld(){
-        return world;
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
     }
 
     @Override
     public void dispose() {
-        //dispose of all our opened resources
-//        map.dispose();
-//        renderer.dispose();
+        super.dispose();
         world.dispose();
         b2dr.dispose();
-//        hud.dispose();
+    }
+
+    public void goalScored(){
+        gvalues.updateScore(game);
     }
 
     public float getPPM(){
@@ -281,5 +185,7 @@ public class GameScreen extends Screens {
     public Goal getOppGoal(){
         return oppgoal;
     }
+
+    public World getWorld() { return world; }
 
 }

@@ -4,13 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
-import com.se339.ui_elements.Hud;
+import com.se339.pixel_hockey.screens.ui_elements.Hud;
 
 /**
- * Created by mweem_000 on 12/5/2016.
+ * Created by Michael Weems on 12/5/2016.
  */
 
 public abstract class MenuScreen extends Screens {

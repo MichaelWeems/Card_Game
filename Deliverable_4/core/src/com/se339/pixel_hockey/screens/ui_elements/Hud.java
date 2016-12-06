@@ -1,16 +1,14 @@
-package com.se339.ui_elements;
+package com.se339.pixel_hockey.screens.ui_elements;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.se339.Client.WebSocket;
 import com.se339.fileUtilities.FileList;
 import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.pixel_hockey.screens.FriendScreen;
-import com.se339.pixel_hockey.screens.GameScreen;
 import com.se339.pixel_hockey.screens.MainMenuScreen;
 import com.se339.pixel_hockey.screens.SearchScreen;
 import com.se339.pixel_hockey.screens.StatScreen;

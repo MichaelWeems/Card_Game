@@ -1,34 +1,38 @@
-package com.se339.Client;
+package com.se339.communication;
 
 import com.badlogic.gdx.math.Vector2;
+import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.pixel_hockey.world.ContactBits;
 
 /**
- * Created by mweem_000 on 12/5/2016.
+ *
+ * Class to forward information to the websocket
+ *
+ * Created by Michael Weems on 12/5/2016.
  */
-
 public class GameValues {
 
     // player information
-    private String player1name;
-    private String player2name;
+    private String username;
+    private String opponentname;
 
-    private int player1score;
-    private int player2score;
+    private int userscore;
+    private int opponentscore;
 
     // puck information
     private Vector2 puckVelocity;
     private float xPos;
     private float yPos;
 
-
-
+    /*
+     * Construct a Gamevalues Object
+     */
     public GameValues(String p1name, String p2name, float x, float y){
-        player1name = p1name;
-        player2name = p2name;
+        username = p1name;
+        opponentname = p2name;
 
-        player1score = 0;
-        player2score = 0;
+        userscore = 0;
+        opponentscore = 0;
 
         puckVelocity = new Vector2(0f, 0f);
         xPos = x;
@@ -61,11 +65,9 @@ public class GameValues {
     /*
      * Increment the score of a player
      */
-    public void updateScore(short player){
-        if (player == ContactBits.PLAYER1)
-            player1score++;
-        else
-            player2score++;
+    public void updateScore(PixelHockeyGame game){
+        userscore++;
+        game.getSocket().sendGoal();
     }
 
     /*
@@ -87,7 +89,7 @@ public class GameValues {
      * Get the current score
      */
     public int[] getScore(){
-        int score[] = {player1score, player2score};
+        int score[] = {userscore, opponentscore};
         return score;
     }
 
@@ -95,13 +97,13 @@ public class GameValues {
      * Get player1name
      */
     public String getPlayer1name(){
-        return player1name;
+        return username;
     }
 
     /*
      * Get player2name
      */
     public String getPlayer2name() {
-        return player2name;
+        return opponentname;
     }
 }

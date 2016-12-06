@@ -7,7 +7,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.se339.Client.WebSocket;
+import com.se339.communication.WebSocket;
 import com.se339.pixel_hockey.screens.MainMenuScreen;
 
 public class PixelHockeyGame extends Game {

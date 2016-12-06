@@ -1,7 +1,4 @@
-package com.se339.Client;
-
-import java.io.IOException;
-
+package com.se339.communication;
 
 import java.io.IOException;
 

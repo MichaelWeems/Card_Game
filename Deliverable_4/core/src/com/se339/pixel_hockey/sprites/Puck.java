@@ -183,15 +183,10 @@ public class Puck extends Sprites {
     public void update(float dt){
         super.update(dt);
 
-        if (checkGoal(screen.getUserGoal())){
-
-        }
-        else if (checkGoal(screen.getOppGoal())){
-
-        }
+        if (checkGoal(screen.getOppGoal()))
+            screen.goalScored();
 
         checkBounds();
-        //for (Player p : screen.getPlayers())
         checkCollision(screen.getPlayer());
     }
 
