@@ -52,11 +52,15 @@ public class WebSocket {
         out.println("joinGame&");
     }
 
+    public String read() throws IOException{
+        return  in.readLine();
+    }
+
     public void searchResponse(PixelHockeyGame game){
         try{
             String message = in.readLine();
             if(message.equals("startGame")){
-                game.setScreen(new GameScreen(game, this));
+                game.setScreen(new GameScreen(game));
             }
         }catch(IOException e){
             l.e("Cannot get Response");
