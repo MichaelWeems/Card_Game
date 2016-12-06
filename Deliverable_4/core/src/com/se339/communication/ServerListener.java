@@ -16,12 +16,15 @@ public class ServerListener {
 
     private int port;
     private String host;
+    private PixelHockeyGame game;
 
     private Log log;
 
-    public ServerListener(final PixelHockeyGame game, int p, String h){
-        port = p;
-        host = h;
+    public ServerListener(final PixelHockeyGame game){
+        port = 8000;
+        host = "192.168.1.107";
+
+        this.game = game;
 
         log = new Log("ServerListener");
 
@@ -34,8 +37,7 @@ public class ServerListener {
                             game.setScreen(new GameScreen(game));
                         }
                         else if (msg.equals("goal")){
-                            //add point to player
-                            //reset puck
+                            callback_GoalScored();
                         }
                         else if(msg.contains("name")){
                             String opp = game.getSocket().read();
@@ -47,6 +49,9 @@ public class ServerListener {
                             float y = -scan.nextInt();
                             Vector2 v = new Vector2(x,y);
 
+
+                            Vector2 v = new Vector2(0f,0f);
+                            callback_VelocityChange(v);
                         }
 
                     } catch (IOException e){
@@ -55,5 +60,13 @@ public class ServerListener {
                 }
             }
         }).start();
+    }
+
+    public void callback_GoalScored(){
+        game.getGameValues().goalScored();
+    }
+
+    public void callback_VelocityChange(Vector2 v){
+        game.getGameValues().updateVelocity(v);
     }
 }

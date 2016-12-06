@@ -94,8 +94,7 @@ public class GameScreen extends Screens {
         sprites.add(usergoal);
 
         Gdx.input.setInputProcessor(new InputHandler(this));
-        gvalues = new GameValues("p1name", "p2name",
-                puck.body.getPosition().x, puck.body.getPosition().y);
+        gvalues = new GameValues(game, this);
 
     }
 
@@ -166,9 +165,30 @@ public class GameScreen extends Screens {
         b2dr.dispose();
     }
 
+    /******************************************************************
+     * GAMEVALUES
+     */
+
+    // user scored goal
     public void goalScored(){
         gvalues.updateScore(game);
     }
+
+    public void resetPuck(){
+        puck = new Puck(this);
+    }
+
+    public void setPuckVelocity(Vector2 v){
+        puck.setVelocity(v);
+    }
+
+    public void endGame(String outcome){
+        game.setScreen(new StatScreen(game, outcome));
+    }
+
+
+    /*
+     *******************************************************************/
 
     public float getPPM(){
         return ppm;

@@ -2,6 +2,7 @@ package com.se339.communication;
 
 import com.badlogic.gdx.math.Vector2;
 import com.se339.pixel_hockey.PixelHockeyGame;
+import com.se339.pixel_hockey.screens.GameScreen;
 import com.se339.pixel_hockey.world.ContactBits;
 
 /**
@@ -13,53 +14,47 @@ import com.se339.pixel_hockey.world.ContactBits;
 public class GameValues {
 
     // player information
-    private String username;
-    private String opponentname;
-
     private int userscore;
     private int opponentscore;
 
     // puck information
     private Vector2 puckVelocity;
-    private float xPos;
-    private float yPos;
+    private ServerListener sl;
+    private PixelHockeyGame game;
+    private GameScreen screen;
 
     /*
      * Construct a Gamevalues Object
      */
-    public GameValues(String p1name, String p2name, float x, float y){
-        username = p1name;
-        opponentname = p2name;
-
+    public GameValues(PixelHockeyGame game, GameScreen screen){
+        this.game = game;
+        this.screen = screen;
         userscore = 0;
         opponentscore = 0;
 
         puckVelocity = new Vector2(0f, 0f);
-        xPos = x;
-        yPos = y;
+        sl = new ServerListener(game);
+    }
+
+    public void reset(){
+        userscore = 0;
+        opponentscore = 0;
+        puckVelocity = new Vector2(0f,0f);
     }
 
     /*
-     * Updates the velocity and position
-     */
-    public void update(Vector2 v, float x, float y){
-        updateVelocity(v);
-        updatePosition(x, y);
-    }
-
-    /*
-     * Update the velocity of the puck
+     * Update the velocity of the puck - user
      */
     public void updateVelocity(Vector2 v){
         puckVelocity = v;
     }
 
     /*
-     * Update the x and y positions
+     * Update from the sserver
      */
-    public void updatePosition(float x, float y){
-        xPos = x;
-        yPos = y;
+    public void setVelocity(Vector2 v){
+        puckVelocity = v;
+        screen.setPuckVelocity(puckVelocity);
     }
 
     /*
@@ -68,14 +63,13 @@ public class GameValues {
     public void updateScore(PixelHockeyGame game){
         userscore++;
         game.getSocket().sendGoal();
+        checkMaxPoints();
     }
 
-    /*
-     * Get the puck position
-     */
-    public float[] getPosition(){
-        float arr[] = {xPos, yPos};
-        return arr;
+    // opponent scored
+    public void goalScored(){
+        opponentscore++;
+        checkMaxPoints();
     }
 
     /*
@@ -93,17 +87,12 @@ public class GameValues {
         return score;
     }
 
-    /*
-     * Get player1name
-     */
-    public String getPlayer1name(){
-        return username;
-    }
-
-    /*
-     * Get player2name
-     */
-    public String getPlayer2name() {
-        return opponentname;
+    public void checkMaxPoints(){
+        if (userscore >= game.getWinningScore()){
+            screen.endGame("winner");
+        }
+        else if (opponentscore >= game.getWinningScore()){
+            screen.endGame("loser");
+        }
     }
 }
