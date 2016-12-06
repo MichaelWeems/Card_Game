@@ -17,16 +17,12 @@ import com.se339.ui_elements.Hud;
  * Created by Zach on 12/3/2016.
  */
 
-public class StatScreen extends Screens{
-    Stage stage;
+public class StatScreen extends MenuScreen{
 
     public StatScreen(PixelHockeyGame game) {
         super(game);
 
-        Log log = new Log("Stat Screen");
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-        Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
+        log = new Log("StatScreen");
 
         log.l("adding to Tile");
         Table title = new Table();
@@ -57,49 +53,8 @@ public class StatScreen extends Screens{
         stats.setPosition(550,1000);
         stage.addActor(stats);
 
-
-
-
-        log.l("Creating hud");
-        Hud hud = new Hud(stage.getWidth(), game, false);
-        stage.addActor(hud);
-
-    }
-
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0.1f, 0.5f, 0.2f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.draw();
-
-
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-    }
-
-    @Override
-    public void show() {
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
-//        skin.dispose();
+        createHUD();
+        setRenderColor(0.1f, 0.5f, 0.2f, 1);
 
     }
 }

@@ -23,17 +23,14 @@ import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.log.Log;
 import com.se339.ui_elements.Hud;
 
-public class MainMenuScreen extends Screens {
-    Stage stage;
-    Log log = new Log("MainMenu Screen");
+public class MainMenuScreen extends MenuScreen {
 
     public MainMenuScreen(PixelHockeyGame game) {
         super(game);
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-        Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
 
-        log.l("adding to Tile");
+        log = new Log("MainMenuScreen");
+
+        log.l("adding to Title");
         Table table = new Table();
         Label titleLabel = new Label("Welcome To\nPixel Hockey", skin);
         titleLabel.setFontScale(6,6);
@@ -42,6 +39,7 @@ public class MainMenuScreen extends Screens {
         table.setSize(260, 195);
         table.setPosition(400, 1500);
 
+        // Create the name table
         Table NameTable = new Table();
         final UserReader uReader = new UserReader();
         String name = uReader.readName();
@@ -61,16 +59,12 @@ public class MainMenuScreen extends Screens {
         NameTable.setSize(260, 195);
         NameTable.setPosition(400, 1000);
 
-
-
-        // table.align(Align.right | Align.bottom);
-
-//        table.debug();
-
+        // Create Texture regions for the buttons
         TextureRegion upRegion = skin.getRegion("default-slider-knob");
         TextureRegion downRegion = skin.getRegion("default-slider-knob");
         BitmapFont buttonFont = skin.getFont("default-font");
 
+        // Create the Change Name button
         TextButton button = new TextButton("Change Name", skin);
         button.getLabel().setFontScale(4,4);
         button.addListener(new InputListener() {
@@ -87,45 +81,10 @@ public class MainMenuScreen extends Screens {
         });
         NameTable.add(button);
 
-
-        log.l("Creating hud");
-        Hud hud = new Hud(stage.getWidth(), game, false);
-        stage.addActor(hud);
+        createHUD();
+        setRenderColor(0.1f, 0.3f, 0.5f, 1);
 
     }
 
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0.1f, 0.3f, 0.5f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.draw();
-    }
 
-
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-    }
-
-    @Override
-    public void show() {
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
-//        skin.dispose();
-    }
 }

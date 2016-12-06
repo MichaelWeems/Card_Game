@@ -18,16 +18,12 @@ import java.io.IOException;
  * Created by Zach on 12/5/2016.
  */
 
-public class SearchScreen extends Screens {
-    Stage stage;
-    Log log = new Log("Search Screen");
+public class SearchScreen extends MenuScreen {
 
     public SearchScreen(PixelHockeyGame game) {
         super(game);
 
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-        Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
+        log = new Log("SearchScreen");
 
         log.l("adding to Tile");
         Table table = new Table();
@@ -38,12 +34,9 @@ public class SearchScreen extends Screens {
         table.setSize(260, 195);
         table.setPosition(400, 1350);
 
-        log.l("Creating hud");
-        Hud hud = new Hud(stage.getWidth(), game, true);
-        stage.addActor(hud);
 
-
-
+        createHUD();
+        setRenderColor(0.1f, 0.3f, 0.5f, 1);
     }
 
     public void searchGame(){
@@ -60,38 +53,8 @@ public class SearchScreen extends Screens {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.1f, 0.3f, 0.5f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.draw();
-
+        super.render(delta);
         searchGame();
     }
 
-
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-    }
-
-    @Override
-    public void show() {
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
-//        skin.dispose();
-    }
 }
