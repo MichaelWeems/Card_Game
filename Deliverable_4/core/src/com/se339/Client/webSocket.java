@@ -52,6 +52,10 @@ public class WebSocket {
         out.println("joinGame&");
     }
 
+    public String read() throws IOException{
+        return  in.readLine();
+    }
+
     public void searchResponse(PixelHockeyGame game){
         try{
             String message = in.readLine();
