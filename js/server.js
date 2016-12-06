@@ -12,13 +12,25 @@ var playerWaiting;
 var server = http.createServer();
 net.createServer(function(sock){ 
   console.log('CONNECTED: ' + sock.remoteAddress +':'+ sock.remotePort);
-  
+    
+    //Read socket info
     sock.on('data', function(data) {
       
       console.log("Buffer to string: "+data.toString('utf-8'));
-      var str = data.toString('utf-8');
+      var obj = data.toString('utf-8').split("&");
+      var func = obj[0];
+      if(func == "joinGame"){
+        joinGame();
+      }else if(func == "endSearch"){
+        playerWaiting == undefined;
+      }
+      
+      
    
+    });
+    //
   
+    //On Close
     sock.on('error', function(data){
       if(sock.partner != undefined){
          console.log("Writing end game to partner");
@@ -27,14 +39,19 @@ net.createServer(function(sock){
       }
       console.log('CLOSED: ' + sock.remoteAddress +' '+ sock.remotePort);
     });
-      
+    //
+    
+    
     var joinGame(){
       if(playerWaiting == undefined || playerWaiting.destroyed){
         playerWaiting = sock;
       }else{
         sock.partner = playerWaiting;
         playerWaiting = sock;
+        sock.write("Game Joined\n");
+        playerWaiting.write("Game Joined\n");
         playerWaiting = undefined;
+        
       }
     }
       
