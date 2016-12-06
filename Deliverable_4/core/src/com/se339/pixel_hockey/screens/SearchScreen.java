@@ -2,8 +2,12 @@ package com.se339.pixel_hockey.screens;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.se339.communication.SearchListener;
+import com.se339.communication.WebSocket;
 import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
+
+import java.io.IOException;
 
 /**
  * Created by Zach on 12/5/2016.
@@ -32,5 +36,19 @@ public class SearchScreen extends MenuScreen {
     public void searchGame(){
         log.l("Searching for game");
         game.getSocket().joinGame();
+        try{
+            game.getSocket().read();
+        }catch(IOException e){
+            System.out.println("Could not recieve message from search");
+        }
+
+
     }
+
+    @Override
+    public void render(float delta) {
+        super.render(delta);
+        searchGame();
+    }
+
 }
