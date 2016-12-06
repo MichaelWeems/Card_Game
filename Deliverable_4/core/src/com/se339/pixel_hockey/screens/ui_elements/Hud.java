@@ -97,7 +97,8 @@ public class Hud extends Table {
 
     public void setStatScreen(){
         log.a("Relocating to stat screen");
-        game.setScreen(new StatScreen(game));
+        String s = null;
+        game.setScreen(new StatScreen(game, s));
         if(onSearch){
             game.getSocket().endSearch();
         }
