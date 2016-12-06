@@ -63,11 +63,13 @@ public class GameValues {
     public void updateScore(PixelHockeyGame game){
         userscore++;
         game.getSocket().sendGoal();
+        checkMaxPoints();
     }
 
+    // opponent scored
     public void goalScored(){
         opponentscore++;
-        checkMaxPoints(opponentscore);
+        checkMaxPoints();
     }
 
     /*
@@ -85,11 +87,12 @@ public class GameValues {
         return score;
     }
 
-    public boolean checkMaxPoints(int score){
-        if (score >= game.getWinningScore()){
-            screen.endGame();
-            return true;
+    public void checkMaxPoints(){
+        if (userscore >= game.getWinningScore()){
+            screen.endGame("winner");
         }
-        return false;
+        else if (opponentscore >= game.getWinningScore()){
+            screen.endGame("loser");
+        }
     }
 }

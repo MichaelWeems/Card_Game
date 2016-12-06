@@ -6,6 +6,7 @@ import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.pixel_hockey.screens.GameScreen;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 /**
  * Created by mweem_000 on 12/5/2016.
@@ -38,8 +39,15 @@ public class ServerListener {
                         else if (msg.equals("goal")){
                             callback_GoalScored();
                         }
+                        else if(msg.contains("name")){
+                            String opp = game.getSocket().read();
+                            //save opp name
+                        }
                         else if (msg.contains("velocity")){
-                            // parse velocity out
+                            Scanner scan = new Scanner(game.getSocket().read());
+                            float x = -scan.nextInt();
+                            float y = -scan.nextInt();
+                            Vector2 v = new Vector2(x,y);
 
 
                             Vector2 v = new Vector2(0f,0f);

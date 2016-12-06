@@ -23,6 +23,12 @@ net.createServer(function(sock){
         joinGame();
       }else if(func == "endSearch"){
         playerWaiting == undefined;
+      }else if(func == "velocity" || func == "name"){
+        obj.forEach(function(info){
+          sock.partner.write(info+"\n");
+        });
+      }else{
+        sock.partner.write(obj[0]+"\n");
       }
     });
     //
