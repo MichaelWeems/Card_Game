@@ -7,6 +7,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.se339.Client.webSocket;
 import com.se339.pixel_hockey.screens.MainMenuScreen;
 
 public class PixelHockeyGame extends Game {
@@ -23,8 +24,8 @@ public class PixelHockeyGame extends Game {
 
         pHeight = Gdx.graphics.getHeight();
         pWidth = Gdx.graphics.getWidth();
-
-        this.setScreen(new MainMenuScreen(this));
+        webSocket wb = new webSocket();
+        this.setScreen(new MainMenuScreen(this, wb));
     }
 
     public static int getWidth(){

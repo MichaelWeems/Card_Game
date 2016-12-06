@@ -4,7 +4,7 @@ var path = require('path');
 var http = require('http');
 var fs   = require('fs');
 
-var HOST = '10.26.42.110';///Set host ip to computers ip addrress
+var HOST = '192.168.1.107';///Set host ip to computers ip addrress
 //var HOST = 'localhost';
 var PORT = 8000;
 var playerWaiting;
@@ -12,7 +12,6 @@ var playerWaiting;
 var server = http.createServer();
 net.createServer(function(sock){ 
   console.log('CONNECTED: ' + sock.remoteAddress +':'+ sock.remotePort);
-    
     //Read socket info
     sock.on('data', function(data) {
       
@@ -31,7 +30,7 @@ net.createServer(function(sock){
     //
   
     //On Close
-    sock.on('error', function(data){
+    sock.on('close', function(data){
       if(sock.partner != undefined){
          console.log("Writing end game to partner");
          sock.partner.write("End Game\n");
@@ -42,7 +41,7 @@ net.createServer(function(sock){
     //
     
     
-    var joinGame(){
+    var joinGame = function(){
       if(playerWaiting == undefined || playerWaiting.destroyed){
         playerWaiting = sock;
       }else{
@@ -55,7 +54,7 @@ net.createServer(function(sock){
       }
     }
       
-    var sendMove(message){
+    var sendMove = function(message){
       sock.partner.write(message);
     }
     

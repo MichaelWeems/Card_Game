@@ -2,6 +2,8 @@ package com.se339.Client;
 
 import com.badlogic.gdx.math.Vector2;
 import com.se339.log.Log;
+import com.se339.pixel_hockey.PixelHockeyGame;
+import com.se339.pixel_hockey.screens.GameScreen;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,7 +37,7 @@ public class webSocket {
 
     //Creates Connection to Web Socket
     public void socketConnect() throws UnknownHostException, IOException {
-        String ip = "10.65.222.239";
+        String ip = "192.168.1.107";
 //        String ip = "localhost";
         int port = 8000;
         System.out.println("[Connecting to socket...]");
@@ -48,10 +50,17 @@ public class webSocket {
     public void joinGame(){
         //Print 'Searching for player'
         out.println("joinGame&");
+    }
+
+    public void searchResponse(PixelHockeyGame game){
         try{
-            String mess = in.readLine();
+            String message = in.readLine();
+            if(message.equals("startGame")){
+                game.setScreen(new GameScreen(game, this));
+            }
         }catch(IOException e){
-            l.e("Cannot join game");
+            l.e("Cannot get Response");
+            e.printStackTrace();
         }
     }
 

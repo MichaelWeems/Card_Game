@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.se339.Client.webSocket;
 import com.se339.fileUtilities.UserReader;
 import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
@@ -19,9 +20,10 @@ import com.se339.ui_elements.Hud;
 
 public class StatScreen extends Screens{
     Stage stage;
-
-    public StatScreen(PixelHockeyGame game) {
+    webSocket wb;
+    public StatScreen(PixelHockeyGame game, webSocket wb) {
         super(game);
+        this.wb = wb;
         Log log = new Log("Stat Screen");
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -60,7 +62,7 @@ public class StatScreen extends Screens{
 
 
         log.l("Creating hud");
-        Hud hud = new Hud(stage.getWidth(), game);
+        Hud hud = new Hud(stage.getWidth(), game, wb, false);
         stage.addActor(hud);
 
     }

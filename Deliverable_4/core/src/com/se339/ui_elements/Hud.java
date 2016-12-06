@@ -5,12 +5,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.se339.Client.webSocket;
 import com.se339.fileUtilities.FileList;
 import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.pixel_hockey.screens.FriendScreen;
 import com.se339.pixel_hockey.screens.GameScreen;
 import com.se339.pixel_hockey.screens.MainMenuScreen;
+import com.se339.pixel_hockey.screens.SearchScreen;
 import com.se339.pixel_hockey.screens.StatScreen;
 
 /**
@@ -21,7 +23,11 @@ public class Hud extends Table {
     Log log;
     Table hud;
     PixelHockeyGame game;
-    public Hud(float width, PixelHockeyGame game){
+    boolean onSearch;
+    webSocket wb;
+    public Hud(float width, PixelHockeyGame game, webSocket wb, boolean onSearch){
+        this.wb = wb;
+        this.onSearch = onSearch;
         this.game = game;
         log = new Log("Hud Class");
 
@@ -78,26 +84,38 @@ public class Hud extends Table {
 
     public void setHomePage(){
         log.a("Relocating to home page");
-        game.setScreen(new MainMenuScreen(game));
+        game.setScreen(new MainMenuScreen(game, wb));
+        if(onSearch){
+            wb.endSearch();
+        }
 //        game.dispose();
     }
 
     public void setFriendScreen(){
         log.a("Relocating to friends page");
-        game.setScreen(new FriendScreen(game));
+        game.setScreen(new FriendScreen(game, wb));
+        if(onSearch){
+            wb.endSearch();
+        }
 //        game.dispose();
     }
 
     public void setStatScreen(){
         log.a("Relocating to stat screen");
-        game.setScreen(new StatScreen(game));
+        game.setScreen(new StatScreen(game, wb));
+        if(onSearch){
+            wb.endSearch();
+        }
 //        game.dispose();
     }
 
     public void findGame(){
         log.a("Finding Game");
-        game.setScreen(new GameScreen(game));
-        game.dispose();
+        game.setScreen(new SearchScreen(game, wb));
+        if(onSearch){
+            wb.endSearch();
+        }
+//        game.dispose();
     }
 
 
