@@ -20,7 +20,7 @@ public class PixelHockeyGame extends Game {
     public BitmapFont font;
     private static int pHeight = 0;
     private static int pWidth = 0;
-    private WebSocket wb;
+    public static WebSocket wb;
     private ServerListener sl;
     private final int winningscore = 3;
 
@@ -50,13 +50,6 @@ public class PixelHockeyGame extends Game {
 
     public void dispose() {
         font.dispose();
-    }
-
-    /*
-     * Retrieve the WebSocket
-     */
-    public WebSocket getSocket(){
-        return wb;
     }
 
     public int getWinningScore(){ return winningscore; }

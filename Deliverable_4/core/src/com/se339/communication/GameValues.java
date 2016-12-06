@@ -62,7 +62,7 @@ public class GameValues {
      */
     public void updateScore(PixelHockeyGame game){
         userscore++;
-        game.getSocket().sendGoal();
+        game.wb.sendGoal();
         checkMaxPoints();
     }
 

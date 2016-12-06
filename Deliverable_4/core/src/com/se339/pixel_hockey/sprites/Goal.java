@@ -79,8 +79,8 @@ public class Goal extends Sprites {
         reg[2] = body.getWorldCenter().y - size;
         reg[3] = body.getWorldCenter().y + size;
 
-        log.g(reg[0], reg[1], "min x", "max x", "x region");
-        log.g(reg[2], reg[3], "min y", "max y", "y region");
+        //log.g(reg[0], reg[1], "min x", "max x", "x region");
+        //log.g(reg[2], reg[3], "min y", "max y", "y region");
         return reg;
     }
 

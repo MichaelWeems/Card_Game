@@ -35,9 +35,9 @@ public class SearchScreen extends MenuScreen {
 
     public void searchGame(){
         log.l("Searching for game");
-        game.getSocket().joinGame();
+        game.wb.joinGame();
         try{
-            game.getSocket().read();
+            game.wb.read();
             game.setScreen(new GameScreen(game));
         }catch(IOException e){
             System.out.println("Could not recieve message from search");

@@ -34,28 +34,30 @@ public class ServerListener {
             public void run() {
                 while (true) {
                     try {
-                        String msg = game.getSocket().read();
+                        log.l("reading from server listener");
+                        String msg = readFromSocket();
+                        log.v(msg, "Server Message");
                         if (msg.equals("startgame")) {
-                            game.setScreen(new GameScreen(game));
+                            callback_startgame();
                         }
                         else if (msg.equals("goal")){
                             callback_GoalScored();
                         }
                         else if(msg.contains("name")){
-                            String opp = game.getSocket().read();
+                            String opp = readFromSocket();
                             //save opp name
                         }
                         else if (msg.contains("velocity")){
-                            Scanner scan = new Scanner(game.getSocket().read());
+                            Scanner scan = new Scanner(readFromSocket());
                             float x = -scan.nextInt();
                             float y = -scan.nextInt();
-                            
+
                             Vector2 v = new Vector2(x,y);
                             callback_VelocityChange(v);
                         }
 
                     } catch (IOException e){
-                            log.e("Error reading from socket: " + e);
+                        log.e("Error reading from socket: " + e);
                     }
                 }
             }
@@ -72,5 +74,11 @@ public class ServerListener {
 
     public void callback_VelocityChange(Vector2 v){
         screen.getGameValues().updateVelocity(v);
+    }
+
+    public void callback_startgame() { game.setScreen(new GameScreen(game));}
+
+    public String readFromSocket() throws IOException {
+        return game.wb.read();
     }
 }

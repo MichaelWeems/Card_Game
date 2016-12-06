@@ -81,7 +81,7 @@ public class Hud extends Table {
         log.a("Relocating to home page");
         game.setScreen(new MainMenuScreen(game));
         if(onSearch){
-            game.getSocket().endSearch();
+            game.wb.endSearch();
         }
 //        game.dispose();
     }
@@ -90,7 +90,7 @@ public class Hud extends Table {
         log.a("Relocating to friends page");
         game.setScreen(new FriendScreen(game));
         if(onSearch){
-            game.getSocket().endSearch();
+            game.wb.endSearch();
         }
 //        game.dispose();
     }
@@ -100,7 +100,7 @@ public class Hud extends Table {
         String s = null;
         game.setScreen(new StatScreen(game, s));
         if(onSearch){
-            game.getSocket().endSearch();
+            game.wb.endSearch();
         }
 //        game.dispose();
     }
@@ -109,7 +109,7 @@ public class Hud extends Table {
         log.a("Finding Game");
         game.setScreen(new SearchScreen(game));
         if(onSearch){
-            game.getSocket().endSearch();
+            game.wb.endSearch();
         }
 //        game.dispose();
     }
