@@ -35,6 +35,7 @@ public class ServerListener {
                         }
                         else if (msg.equals("goal")){
                             //add point to player
+                            //reset puck
                         }
                         else if(msg.contains("name")){
                             String opp = game.getSocket().read();
@@ -42,8 +43,8 @@ public class ServerListener {
                         }
                         else if (msg.contains("velocity")){
                             Scanner scan = new Scanner(game.getSocket().read());
-                            float x = scan.nextInt();
-                            float y = scan.nextInt();
+                            float x = -scan.nextInt();
+                            float y = -scan.nextInt();
                             Vector2 v = new Vector2(x,y);
 
                         }
