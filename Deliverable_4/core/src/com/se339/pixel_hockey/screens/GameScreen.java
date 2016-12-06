@@ -26,8 +26,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.se339.pixel_hockey.GameValues;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.pixel_hockey.input.InputHandler;
+import com.se339.pixel_hockey.sprites.Goal;
+import com.se339.pixel_hockey.sprites.Player;
 import com.se339.pixel_hockey.sprites.Puck;
 import com.se339.pixel_hockey.sprites.Sprites;
 import com.se339.pixel_hockey.sprites.Stick;
@@ -44,6 +47,7 @@ public class GameScreen extends Screens {
     //Reference to our Game, used to set Screens
     private PixelHockeyGame game;
     public static boolean alreadyDestroyed = false;
+    public GameValues gvalues;
 
     //basic playscreen variables
     private OrthographicCamera gamecam;
@@ -57,8 +61,10 @@ public class GameScreen extends Screens {
 
     //sprites
     private ArrayList<Sprites> sprites;
-    private Stick player;
+    private Player player;
     private Puck puck;
+    private Goal usergoal;
+    private Goal oppgoal;
 
     private Music music;
 
@@ -72,7 +78,7 @@ public class GameScreen extends Screens {
         log = new Log("GameScreen");
 
         this.game = game;
-        ppm = 100;
+        ppm = 500;
 
         //create cam used to follow mario through cam world
         gamecam = new OrthographicCamera();
@@ -91,17 +97,21 @@ public class GameScreen extends Screens {
         b2dr = new Box2DDebugRenderer();
         creator = new WorldCreator(this);
 
-        //create mario in our game world
-        player = new Stick(this, ContactBits.PLAYER1, FileList.image_stick_blue);
+        // create all sprites
+        player = new Player(this,  FileList.image_stick_blue, ContactBits.PLAYER1);
         puck = new Puck(this);
+        usergoal = new Goal(this, FileList.image_goal_user, (PixelHockeyGame.getWidth() / 2) / ppm, (PixelHockeyGame.getHeight() / 8) / ppm);
 
         sprites = new ArrayList<Sprites>();
         sprites.add(player);
         sprites.add(puck);
+        sprites.add(usergoal);
 
-        world.setContactListener(new WorldContactListener());
+        //world.setContactListener(new WorldContactListener());
 
         Gdx.input.setInputProcessor(new InputHandler(this));
+        gvalues = new GameValues("p1name", "p2name",
+                puck.body.getPosition().x, puck.body.getPosition().y);
 
 
 //        music = MarioBros.manager.get("audio/music/mario_music.ogg", Music.class);
@@ -127,9 +137,10 @@ public class GameScreen extends Screens {
 //        }
 //    }
 
-    public Stick getPlayer(){
+    public Player getPlayer(){
         return player;
     }
+
     public Puck getPuck() { return puck; }
     public float[] getPuckPosition() {
         float xy[] = {0,0};
@@ -167,8 +178,9 @@ public class GameScreen extends Screens {
         //takes 1 step in the physics simulation(60 times per second)
         //world.step(1 / 120f, 6, 2);
         world.step(dt, 6, 2);
-        player.update(dt);
-        puck.update(dt);
+        for (Sprites s : sprites)
+            s.update(dt);
+
 //        for(Enemy enemy : creator.getEnemies()) {
 //            enemy.update(dt);
 //            if(enemy.getX() < player.getX() + 224 / MarioBros.PPM) {
@@ -270,6 +282,14 @@ public class GameScreen extends Screens {
 
     public ArrayList<Sprites> getSprites(){
         return sprites;
+    }
+
+    public Goal getUserGoal(){
+        return usergoal;
+    }
+
+    public Goal getOppGoal(){
+        return oppgoal;
     }
 
 }

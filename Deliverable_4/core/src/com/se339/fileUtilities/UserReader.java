@@ -29,10 +29,22 @@ public class UserReader {
         return wins;
     }
 
+    public void writeWin(){
+        Preferences pref = Gdx.app.getPreferences("User Info");
+        pref.putInteger("wins", getWins() + 1);
+        pref.flush();
+    }
+
     public int getLosses(){
         Preferences pref = Gdx.app.getPreferences("User Info");
         int losses = pref.getInteger("losses");
         return losses;
+    }
+
+    public void writeLoss(){
+        Preferences pref = Gdx.app.getPreferences("User Info");
+        pref.putInteger("Loss", getLosses() + 1);
+        pref.flush();
     }
 
     //Can be uncompleted games such as a timed out game or disconnect

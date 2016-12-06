@@ -24,35 +24,28 @@ import com.se339.pixel_hockey.world.ContactBits;
 
 public class Puck extends Sprites {
 
-    private short player;
-    private FixtureDef fdef;
-    private int radius;
-    private float size;
-
     public Puck(GameScreen screen) {
         super(screen, FileList.image_puck_blue);
-
-        log = new Log("Puck");
-
-        posX = (PixelHockeyGame.getWidth() / 2) / screen.getPPM();
-        posY = (PixelHockeyGame.getHeight() / 2) / screen.getPPM();
-
-        dynamic = true;
-        radius = 128;
-        size = 100 / screen.getPPM();
-        sprite.setSize(size, size);
-        sprite.setPosition(posX, posY);
-
-        definePuck();
-
+        init();
         //setBounds(0,0, radius / screen.getPPM(), radius / screen.getPPM());
         //setTexture(texture);
     }
 
+    private void init(){
+        log = new Log("Puck");
+        initSprite((PixelHockeyGame.getWidth() / 2) / screen.getPPM(),
+                (PixelHockeyGame.getHeight() / 2) / screen.getPPM(),
+                100 / screen.getPPM(),
+                true);
+        definePuck();
+    }
+
+
+
     private void definePuck(){
         if (body != null) world.destroyBody(body);
 
-        defineBody(posX, posY, true);
+        defineBody();
         defineFixture();
     }
 
@@ -85,6 +78,10 @@ public class Puck extends Sprites {
 //        body.createFixture(fdef).setUserData(this);
     }
 
+    /*
+     * Checks the bounds of the screen - pushes the puck
+     * back into the screen if it tries to leave
+     */
     private void checkBounds(){
         float vel  = 5f;
         float xVel = 0f;
@@ -116,9 +113,11 @@ public class Puck extends Sprites {
         setVelocity(new Vector2(xVel, yVel));
     }
 
-    public void checkCollision(Stick stick) {
+    public void checkCollision(Player player) {
         float pos[] = {body.getPosition().x, body.getPosition().y};
-        float xy[] = {stick.body.getPosition().x, stick.body.getPosition().y};
+        float xy[] = {player.body.getPosition().x, player.body.getPosition().y};
+
+        float playersize = screen.getPlayer().getSize();
         float radii = screen.getPlayer().getSize() + screen.getPuck().getSize();
 
         boolean left = false;
@@ -135,17 +134,17 @@ public class Puck extends Sprites {
 
             //log.l("Puck-Stick Collision");
             if (pos[0] >= xy[0]) {
-                xy[0] -= screen.getPlayer().getSize() / 4;
+                xy[0] -= playersize / 4;
             } else {
                 left = true;
-                xy[0] += screen.getPlayer().getSize() / 4;
+                xy[0] += playersize / 4;
             }
 
             if (pos[1] >= xy[1]) {
-                xy[1] -= screen.getPlayer().getSize() / 4;
+                xy[1] -= playersize / 4;
             } else {
                 down = true;
-                xy[1] += screen.getPlayer().getSize() / 4;
+                xy[1] += playersize / 4;
             }
 
 
@@ -163,7 +162,7 @@ public class Puck extends Sprites {
             log.l("Puck Collision");
             //            log.d();
             //            log.d();
-            screen.getPlayer().sprite.setPosition(xy[0], xy[1]);
+            player.sprite.setPosition(xy[0], xy[1]);
 
         }
     }
@@ -183,15 +182,36 @@ public class Puck extends Sprites {
 
     public void update(float dt){
         super.update(dt);
-        checkBounds();
-        checkCollision(screen.getPlayer());
-    }
 
-    public int getRadius(){
-        return radius;
+        if (checkGoal(screen.getUserGoal())){
+
+        }
+        else if (checkGoal(screen.getOppGoal())){
+
+        }
+
+        checkBounds();
+        //for (Player p : screen.getPlayers())
+        checkCollision(screen.getPlayer());
     }
 
     public float getSize(){
         return size;
+    }
+
+    public boolean checkGoal(Goal goal){
+        float reg[] = goal.getRegion();
+        float x = body.getPosition().x;
+        float y = body.getPosition().y;
+
+        // check if player is in goal
+        if (x > reg[0] &&
+                x < reg[1] &&
+                y > reg[2] &&
+                y < reg[3]){
+
+            return true;
+        }
+        return false;
     }
 }

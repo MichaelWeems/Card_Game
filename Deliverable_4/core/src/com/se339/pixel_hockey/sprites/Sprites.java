@@ -36,9 +36,13 @@ public abstract class Sprites{
     public float posY;
     public boolean dynamic;
 
+    protected FixtureDef fdef;
+    protected float size;
+
     public Sprites(GameScreen screen) {
         this.screen = screen;
         texture = null;
+        sprite = null;
         init();
     }
 
@@ -62,6 +66,41 @@ public abstract class Sprites{
         dynamic = false;
     }
 
+    protected void setSprite(String image){
+        texture = new Texture(image);
+        sprite = new Sprite(texture);
+    }
+
+    protected void initSprite(float pX, float pY, float size, boolean dynamic){
+        this.posX = pX;
+        this.posY = pY;
+        this.size = size;
+        this.dynamic = dynamic;
+        sprite.setPosition(posX, posY);
+        sprite.setSize(size, size);
+    }
+
+    public void setPosition(float x, float y){
+        posX = x;
+        posY = y;
+        sprite.setPosition(x, y);
+    }
+
+    public abstract void defineFixture();
+
+    protected void defineBody(){
+        //log.g(x,y,"posX", "posY", "defineBody() Called");
+
+        BodyDef bdef = new BodyDef();
+        bdef.position.set(posX, posY);
+        if (dynamic)
+            bdef.type = BodyDef.BodyType.DynamicBody;
+        else
+            bdef.type = BodyDef.BodyType.StaticBody;
+
+        body = world.createBody(bdef);
+    }
+
     public void update(float dt){
 //        if (screen.getHud().isTimeUp() && !isDead()) {
 //            die();
@@ -73,21 +112,6 @@ public abstract class Sprites{
         // update sprite with the current texture
         //sprite.setTexture(texture);
     }
-
-    protected void defineBody(float x, float y, boolean dyn){
-        //log.g(x,y,"posX", "posY", "defineBody() Called");
-
-        BodyDef bdef = new BodyDef();
-        bdef.position.set(x, y);
-        if (dyn)
-            bdef.type = BodyDef.BodyType.DynamicBody;
-        else
-            bdef.type = BodyDef.BodyType.StaticBody;
-
-        body = world.createBody(bdef);
-    }
-
-    public abstract void defineFixture();
 
     public void draw(Batch batch){
         sprite.draw(batch);

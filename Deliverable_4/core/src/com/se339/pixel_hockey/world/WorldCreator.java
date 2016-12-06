@@ -18,7 +18,7 @@ public class WorldCreator {
     public WorldCreator(GameScreen screen){
         World world = screen.getWorld();
 
-        // make puck
+        // make user goal
         //makeBody(world, PixelHockeyGame.getWidth() / 2,
         //        PixelHockeyGame.getHeight() / 2, 256 / 2);
 

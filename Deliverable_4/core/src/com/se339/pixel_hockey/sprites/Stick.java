@@ -19,46 +19,35 @@ import com.se339.pixel_hockey.world.ContactBits;
  * Created by mweem_000 on 12/4/2016.
  */
 
-public class Stick extends Sprites {
+public abstract class Stick extends Sprites {
 
-    private short player;
-    private FixtureDef fdef;
-    private int radius;
-    private float size;
+    public Stick(GameScreen screen) {
+        super(screen);
+        setSprite(FileList.image_stick_blue);
+        init();
+    }
 
-    public Stick(GameScreen screen, short player, String image) {
+    public Stick(GameScreen screen, String image){
         super(screen, image);
+        init();
+    }
 
+    private void init(){
         log = new Log("Stick");
-
-        texture = new Texture(image);
-
-        this.player = player;
-        posX = (PixelHockeyGame.getWidth() / 2) / screen.getPPM();
-        posY = (PixelHockeyGame.getHeight() / 4) / screen.getPPM();
-        size = 100 / screen.getPPM();
-
-        if (player == ContactBits.PLAYER2) posY *= 3;
-
-        dynamic = true;
-        radius = 128;
-        sprite.setSize(size, size);
-        sprite.setPosition(posX, posY);
-
+        initSprite((PixelHockeyGame.getWidth() / 2) / screen.getPPM(),
+                (PixelHockeyGame.getHeight() / 4) / screen.getPPM(),
+                100 / screen.getPPM(),
+                true);
         defineStick();
-
-        //setBounds(0,0, radius / screen.getPPM(), radius / screen.getPPM());
-        //setTexture(texture);
     }
 
     private void defineStick(){
         if (body != null) world.destroyBody(body);
 
-        defineBody(posX, posY, true);
-        defineFixture();
+        defineBody();
     }
 
-    public void defineFixture(){
+    public void defineFixture(short player){
         fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(size / 4);
@@ -86,16 +75,11 @@ public class Stick extends Sprites {
         //log.l("Inverting Y-coordinate");
         //log.g(xy[0],xy[1],"posX", "posY", "move() Called");
 
-
         posX = xy[0];
         posY = xy[1];
         defineStick();
 
         //log.g(body.getPosition().x, body.getPosition().y, "Stick X", "Stick Y", "New Stick Position");
-    }
-
-    public int getRadius(){
-        return radius;
     }
 
     public float getSize(){

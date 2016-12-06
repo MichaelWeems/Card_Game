@@ -109,18 +109,19 @@ public class InputHandler implements InputProcessor {
 
     private boolean doTouchDownAction(int x, int y){
 
+        y = PixelHockeyGame.getHeight() - y;
+
         float xy[] = convertToMeters(x,y);
-        if (!acceptableInput(xy)) {
+
+        if (!screen.getPlayer().acceptableInput(xy)) {
             //log.l("Input is not within player bounds");
             return false;
         }
 
-        xy = checkForCollision(xy);
-        xy = modifyForBounds(xy);
+        xy = screen.getPlayer().checkForCollision(xy);
+        xy = screen.getPlayer().modifyForBounds(xy);
 
         //log.g(xy[0], xy[1], "modified x", "modified y", "User Input (now within bounds)");
-
-        xy[1] = PixelHockeyGame.getHeight() / screen.getPPM() - xy[1];
         //log.g(xy[0], xy[1], "x", "y", "Inverted Y");
 
         screen.getPlayer().move(xy);
@@ -137,91 +138,11 @@ public class InputHandler implements InputProcessor {
         return false;
     }
 
-    private float[] modifyForBounds(float xy[]){
-        float mod[] = xy;
-        float size = screen.getPlayer().getSize();
-
-        if (mod[0] < size )
-            mod[0] = size;
-        else if (mod[0] > PixelHockeyGame.getWidth() / screen.getPPM() - size)
-            mod[0] = PixelHockeyGame.getWidth() / screen.getPPM() - size;
-
-        if (mod[1] < size)
-            mod[1] = size;
-        else if (mod[1] > PixelHockeyGame.getHeight() / screen.getPPM() - size)
-            mod[1] = PixelHockeyGame.getHeight() / screen.getPPM() - size;
-
-        return mod;
-    }
-
-    private float[] checkForCollision(float xy[]) {
-        float pos[] = screen.getPuckPosition();
-        float radii = screen.getPlayer().getSize() + screen.getPuck().getSize();
-        boolean left = false;
-        boolean right = false;
-        boolean up = false;
-        boolean down = false;
-
-        double x2 = Math.pow(Math.abs(pos[0] - xy[0]),2);
-        double y2 = Math.pow(Math.abs(pos[1] - xy[1]),2);
-
-        if (Math.sqrt(x2 + y2) < radii) {
-//            log.g(radii, Math.sqrt(x2 + y2), "radii", "distance", "Collision");
-//
-//            log.g(pos[0], xy[0], "Puck x", "Stick x", "");
-//            log.g(pos[1], xy[1], "Puck y", "Stick y", "");
-
-            //log.l("Puck-Stick Collision");
-            if (pos[0] >= xy[0]) {
-                right = true;
-                xy[0] -= screen.getPuck().getSize() / 4;
-            } else {
-                left = true;
-                xy[0] += screen.getPuck().getSize() / 4;
-            }
-
-            if (pos[1] >= xy[1]) {
-                up = true;
-                xy[1] -= screen.getPuck().getSize() / 4;
-            } else {
-                down = true;
-                xy[1] += screen.getPuck().getSize() / 4;
-            }
-
-            float xVel = 0f;
-            float yVel = 0f;
-
-            if (left || right)
-                xVel = 5f;
-            if (left)
-                xVel *= -1f;
-            if (down || up)
-                yVel = 5f;
-            if (down)
-                yVel *= -1f;
-
-            log.g(xVel, yVel, "xVel", "yVel", "Applying velocity to puck");
-            log.l("Puck Collision");
-//            log.d();
-//            log.d();
-            screen.getPuck().setVelocity(xVel, yVel);
-        }
-
-        return xy;
-    }
-
-    /*
-     * Define the acceptable range of input for the player
-     */
-    private boolean acceptableInput(float xy[]){
-        if (xy[1] > PixelHockeyGame.getHeight() / 2)
-            return true;
-        //return false;
-        return true;
-    }
-
     private float[] convertToMeters(int x, int y){
         float m[] = {x / screen.getPPM(), y / screen.getPPM()};
         return m;
     }
+
+
+
 }
