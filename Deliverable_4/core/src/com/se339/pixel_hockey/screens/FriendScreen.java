@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.se339.Client.webSocket;
 import com.se339.fileUtilities.FriendReader;
 import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
@@ -26,10 +27,11 @@ public class FriendScreen extends Screens {
     Stage stage;
     Skin skin;
     Table container;
+    webSocket wb;
 
-    public FriendScreen(PixelHockeyGame game) {
-
+    public FriendScreen(PixelHockeyGame game, webSocket wb) {
         super(game);
+        this.wb = wb;
         Log log = new Log("Friend Screen");
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -58,10 +60,11 @@ public class FriendScreen extends Screens {
             }
         };
         FriendReader fReader = new FriendReader();
-        fReader.init();
-        Slider slider = new Slider(0, 100, 1, false, skin);
-        slider.addListener(stopTouchDown); // Stops touchDown events from propagating to the FlickScrollPane.
-        table.add(slider);
+        //fReader.init();
+        //Slider slider = new Slider(0, 100, 1, false, skin);
+        //slider.addListener(stopTouchDown); // Stops touchDown events from propagating to the FlickScrollPane.
+        //table.add(slider);
+        scroll.addListener(stopTouchDown);
         ArrayList<String> friends = fReader.getFriends();
         Label header = new Label("Name               Wins               Losses", skin);
         header.setFontScale(3,3);
@@ -141,7 +144,7 @@ public class FriendScreen extends Screens {
 
 
         log.l("Creating hud");
-        Hud hud = new Hud(stage.getWidth(), game);
+        Hud hud = new Hud(stage.getWidth(), game, wb, false);
         stage.addActor(hud);
 
     }

@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.se339.Client.webSocket;
 import com.se339.fileUtilities.Directory;
 import com.se339.fileUtilities.DirectoryList;
 import com.se339.fileUtilities.FileList;
@@ -65,6 +66,7 @@ public class GameScreen extends Screens {
     private Puck puck;
     private Goal usergoal;
     private Goal oppgoal;
+    private webSocket wb;
 
     private Music music;
 
@@ -72,7 +74,7 @@ public class GameScreen extends Screens {
 //    private LinkedBlockingQueue<ItemDef> itemsToSpawn;
 
 
-    public GameScreen(PixelHockeyGame game){
+    public GameScreen(PixelHockeyGame game, webSocket wb){
         super(game);
 
         log = new Log("GameScreen");
@@ -227,7 +229,7 @@ public class GameScreen extends Screens {
 //        hud.stage.draw();
 
         if(gameOver()){
-            game.setScreen(new MainMenuScreen(game));
+            game.setScreen(new MainMenuScreen(game, wb));
             dispose();
         }
 

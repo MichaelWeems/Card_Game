@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.se339.Client.webSocket;
 import com.se339.fileUtilities.UserReader;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.log.Log;
@@ -25,8 +26,10 @@ import com.se339.ui_elements.Hud;
 public class MainMenuScreen extends Screens {
     Stage stage;
     Log log = new Log("MainMenu Screen");
-    public MainMenuScreen(PixelHockeyGame game) {
+    webSocket wb;
+    public MainMenuScreen(PixelHockeyGame game, webSocket wb) {
         super(game);
+        this.wb = wb;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
@@ -87,7 +90,7 @@ public class MainMenuScreen extends Screens {
 
 
         log.l("Creating hud");
-        Hud hud = new Hud(stage.getWidth(), game);
+        Hud hud = new Hud(stage.getWidth(), game, wb, false);
         stage.addActor(hud);
 
     }
