@@ -2,8 +2,6 @@ package com.se339.pixel_hockey.screens;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.se339.communication.SearchListener;
-import com.se339.communication.WebSocket;
 import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
 
@@ -32,24 +30,24 @@ public class SearchScreen extends MenuScreen {
         createHUD();
         setRenderColor(0.1f, 0.3f, 0.5f, 1);
     }
-
-    public void searchGame(){
-        log.l("Searching for game");
-        game.wb.joinGame();
-        try{
-            game.wb.read();
-            game.setScreen(new GameScreen(game));
-        }catch(IOException e){
-            System.out.println("Could not recieve message from search");
-        }
-
-
-    }
+//
+//    public void searchGame(){
+//        log.l("Searching for game");
+//        game.wb.joinGame();
+//        try{
+//            game.wb.getSock().readLine();
+//            game.setScreen(new GameScreen(game));
+//        }catch(IOException e){
+//            System.out.println("Could not recieve message from search");
+//        }
+//
+//
+//    }
 
     @Override
     public void render(float delta) {
         super.render(delta);
-        searchGame();
+//        searchGame();
     }
 
 }

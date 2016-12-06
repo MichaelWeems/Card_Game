@@ -22,7 +22,7 @@ import java.net.UnknownHostException;
  */
 
 public class WebSocket {
-    private ServerSocket socket = null;
+    private Socket socket = null;
     private Socket sock;
     private PrintWriter out = null;
     private BufferedReader in = null;
@@ -47,11 +47,12 @@ public class WebSocket {
 //        String ip = "localhost";
         int port = 8000;
         System.out.println("[Connecting to socket...]");
-        ServerSocketHints hint = new ServerSocketHints();
-        hint.acceptTimeout = 60;
+        SocketHints hint = new SocketHints();
+        hint.connectTimeout = 60;
 
-        this.socket = Gdx.net.newServerSocket(Net.Protocol.TCP, 8000, hint);//new Socket(ip, port);
-        sock = socket.accept(null);
+        sock = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, 8000, hint);//new Socket(ip, port);
+//        sock = socket.accept(null);
+//        sock = new Socket(ip, port);
         out = new PrintWriter(sock.getOutputStream(), true);
 //        in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 

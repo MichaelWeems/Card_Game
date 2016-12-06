@@ -1,6 +1,11 @@
 package com.se339.communication;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.net.ServerSocket;
+import com.badlogic.gdx.net.ServerSocketHints;
+import com.badlogic.gdx.net.Socket;
 import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.pixel_hockey.screens.GameScreen;
@@ -34,11 +39,18 @@ public class ServerListener {
         log = new Log("ServerListener");
         in = new BufferedReader(new InputStreamReader(game.wb.getSock().getInputStream()));
         new Thread(new Runnable() {
+
+
             public void run() {
+                ServerSocketHints hint = new ServerSocketHints();
+                ServerSocket server = Gdx.net.newServerSocket(Net.Protocol.TCP, 8000, hint);
+                Socket client = server.accept(null);
                 while (true) {
+
                     try {
                         log.l("reading from server listener");
-                        String msg = in.readLine();
+                        String msg = new BufferedReader(new InputStreamReader(client.getInputStream())).readLine();
+//                        String msg = in.readLine();
                         log.v(msg, "Server Message");
                         if (msg.equals("startgame")) {
                             callback_startgame();
@@ -47,11 +59,11 @@ public class ServerListener {
                             callback_GoalScored();
                         }
                         else if(msg.contains("name")){
-                            String opp = in.readLine();
+                            String opp = new BufferedReader(new InputStreamReader(client.getInputStream())).readLine();
                             //save opp name
                         }
                         else if (msg.contains("velocity")){
-                            Scanner scan = new Scanner(in.readLine());
+                            Scanner scan = new Scanner(new BufferedReader(new InputStreamReader(client.getInputStream())).readLine());
                             float x = -scan.nextInt();
                             float y = -scan.nextInt();
 
