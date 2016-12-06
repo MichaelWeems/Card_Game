@@ -31,23 +31,23 @@ public class SearchScreen extends MenuScreen {
         setRenderColor(0.1f, 0.3f, 0.5f, 1);
     }
 //
-//    public void searchGame(){
-//        log.l("Searching for game");
-//        game.wb.joinGame();
+    public void searchGame(){
+        log.l("Searching for game");
+        game.wb.joinGame();
 //        try{
 //            game.wb.getSock().readLine();
 //            game.setScreen(new GameScreen(game));
 //        }catch(IOException e){
 //            System.out.println("Could not recieve message from search");
 //        }
-//
-//
-//    }
+
+
+    }
 
     @Override
     public void render(float delta) {
         super.render(delta);
-//        searchGame();
+        searchGame();
     }
 
 }
