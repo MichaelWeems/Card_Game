@@ -18,14 +18,12 @@ net.createServer(function(sock){
       console.log("Buffer to string: "+data.toString('utf-8'));
       var obj = data.toString('utf-8').split("&");
       var func = obj[0];
+      console.log("after split: "+func);
       if(func == "joinGame"){
         joinGame();
       }else if(func == "endSearch"){
         playerWaiting == undefined;
       }
-      
-      
-   
     });
     //
   
@@ -40,15 +38,22 @@ net.createServer(function(sock){
     });
     //
     
-    
+    //
+    sock.on('error', function(data){
+      console.log("Player is absent");
+    });
+    //
+  
     var joinGame = function(){
       if(playerWaiting == undefined || playerWaiting.destroyed){
+        console.log("Waiting to be paired");
         playerWaiting = sock;
       }else{
+        console.log("paired with partner");
         sock.partner = playerWaiting;
         playerWaiting = sock;
-        sock.write("Game Joined\n");
-        playerWaiting.write("Game Joined\n");
+        sock.write("startGame\n");
+        playerWaiting.write("startGame\n");
         playerWaiting = undefined;
         
       }

@@ -6,10 +6,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.se339.Client.SearchListener;
 import com.se339.Client.WebSocket;
 import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.ui_elements.Hud;
+
+import java.io.IOException;
 
 /**
  * Created by Zach on 12/5/2016.
@@ -39,11 +42,20 @@ public class SearchScreen extends Screens {
         Hud hud = new Hud(stage.getWidth(), game, true);
         stage.addActor(hud);
 
+
+
     }
 
     public void searchGame(){
         log.l("Searching for game");
         game.getSocket().joinGame();
+        try{
+            game.getSocket().read();
+        }catch(IOException e){
+            System.out.println("Could not recieve message from search");
+        }
+
+
     }
 
     @Override
@@ -51,6 +63,8 @@ public class SearchScreen extends Screens {
         Gdx.gl.glClearColor(0.1f, 0.3f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.draw();
+
+        searchGame();
     }
 
 
