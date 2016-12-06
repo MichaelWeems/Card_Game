@@ -13,7 +13,7 @@ import com.se339.pixel_hockey.PixelHockeyGame;
 
 public class StatScreen extends MenuScreen{
 
-    public StatScreen(PixelHockeyGame game) {
+    public StatScreen(PixelHockeyGame game, String outcome) {
         super(game);
 
         log = new Log("StatScreen");
@@ -31,6 +31,12 @@ public class StatScreen extends MenuScreen{
         Table stats = new Table();
         UserReader ur = new UserReader();
 
+        if(outcome != null){
+            Label outcoumeLabel = new Label(outcome, skin);
+            outcoumeLabel.setFontScale(4,4);
+            stats.add(outcoumeLabel);
+            stats.row();
+        }
         Label winsLabel = new Label("Wins: "+ur.getWins(), skin);
         winsLabel.setFontScale(4,4);
         stats.add(winsLabel);
