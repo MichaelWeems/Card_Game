@@ -4,43 +4,29 @@ package com.se339.pixel_hockey.screens;
  * Created by Zach on 11/30/2016.
  */
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.se339.Client.webSocket;
-import com.se339.fileUtilities.Directory;
-import com.se339.fileUtilities.DirectoryList;
+import com.se339.Client.WebSocket;
 import com.se339.fileUtilities.FileList;
 import com.se339.log.*;
-import com.badlogic.gdx.graphics.Texture;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
-import com.se339.pixel_hockey.GameValues;
+import com.se339.Client.GameValues;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.pixel_hockey.input.InputHandler;
 import com.se339.pixel_hockey.sprites.Goal;
 import com.se339.pixel_hockey.sprites.Player;
 import com.se339.pixel_hockey.sprites.Puck;
 import com.se339.pixel_hockey.sprites.Sprites;
-import com.se339.pixel_hockey.sprites.Stick;
-import com.se339.pixel_hockey.sounds.SoundHandler;
 import com.se339.pixel_hockey.world.ContactBits;
-import com.se339.pixel_hockey.world.WorldContactListener;
 import com.se339.pixel_hockey.world.WorldCreator;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class GameScreen extends Screens {
@@ -66,7 +52,6 @@ public class GameScreen extends Screens {
     private Puck puck;
     private Goal usergoal;
     private Goal oppgoal;
-    private webSocket wb;
 
     private Music music;
 
@@ -74,7 +59,7 @@ public class GameScreen extends Screens {
 //    private LinkedBlockingQueue<ItemDef> itemsToSpawn;
 
 
-    public GameScreen(PixelHockeyGame game, webSocket wb){
+    public GameScreen(PixelHockeyGame game){
         super(game);
 
         log = new Log("GameScreen");
@@ -229,7 +214,7 @@ public class GameScreen extends Screens {
 //        hud.stage.draw();
 
         if(gameOver()){
-            game.setScreen(new MainMenuScreen(game, wb));
+            game.setScreen(new MainMenuScreen(game));
             dispose();
         }
 

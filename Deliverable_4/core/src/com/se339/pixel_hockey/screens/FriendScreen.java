@@ -8,13 +8,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.se339.Client.webSocket;
+import com.se339.Client.WebSocket;
 import com.se339.fileUtilities.FriendReader;
 import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
-import com.se339.ui_elements.FriendScroll;
 import com.se339.ui_elements.Hud;
 
 import java.util.ArrayList;
@@ -27,11 +25,10 @@ public class FriendScreen extends Screens {
     Stage stage;
     Skin skin;
     Table container;
-    webSocket wb;
 
-    public FriendScreen(PixelHockeyGame game, webSocket wb) {
+    public FriendScreen(PixelHockeyGame game) {
         super(game);
-        this.wb = wb;
+
         Log log = new Log("Friend Screen");
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -144,7 +141,7 @@ public class FriendScreen extends Screens {
 
 
         log.l("Creating hud");
-        Hud hud = new Hud(stage.getWidth(), game, wb, false);
+        Hud hud = new Hud(stage.getWidth(), game, false);
         stage.addActor(hud);
 
     }

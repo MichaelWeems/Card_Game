@@ -2,18 +2,11 @@ package com.se339.pixel_hockey.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.se339.Client.webSocket;
-import com.se339.fileUtilities.UserReader;
+import com.se339.Client.WebSocket;
 import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.ui_elements.Hud;
@@ -25,10 +18,10 @@ import com.se339.ui_elements.Hud;
 public class SearchScreen extends Screens {
     Stage stage;
     Log log = new Log("Search Screen");
-    webSocket wb;
-    public SearchScreen(PixelHockeyGame game, webSocket wb) {
+
+    public SearchScreen(PixelHockeyGame game) {
         super(game);
-        this.wb = wb;
+
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
@@ -43,14 +36,14 @@ public class SearchScreen extends Screens {
         table.setPosition(400, 1350);
 
         log.l("Creating hud");
-        Hud hud = new Hud(stage.getWidth(), game, wb, true);
+        Hud hud = new Hud(stage.getWidth(), game, true);
         stage.addActor(hud);
 
     }
 
     public void searchGame(){
         log.l("Searching for game");
-        wb.joinGame();
+        game.getSocket().joinGame();
     }
 
     @Override

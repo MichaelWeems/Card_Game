@@ -16,13 +16,13 @@ import java.net.UnknownHostException;
  * Created by Zach on 12/5/2016.
  */
 
-public class webSocket {
+public class WebSocket {
     private Socket socket = null;
     private PrintWriter out = null;
     private BufferedReader in = null;
     private Log l;
 
-    public webSocket(){
+    public WebSocket(){
         l = new Log("WebSocket class");
         try {
             socketConnect();

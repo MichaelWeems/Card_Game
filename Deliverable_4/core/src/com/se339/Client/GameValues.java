@@ -1,4 +1,4 @@
-package com.se339.pixel_hockey;
+package com.se339.Client;
 
 import com.badlogic.gdx.math.Vector2;
 import com.se339.pixel_hockey.world.ContactBits;
@@ -20,6 +20,8 @@ public class GameValues {
     private Vector2 puckVelocity;
     private float xPos;
     private float yPos;
+
+
 
     public GameValues(String p1name, String p2name, float x, float y){
         player1name = p1name;
