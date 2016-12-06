@@ -37,7 +37,7 @@ public class ServerListener {
         this.screen = null;
 
         log = new Log("ServerListener");
-        in = new BufferedReader(new InputStreamReader(game.wb.getSock().getInputStream()));
+//        in = new BufferedReader(new InputStreamReader(game.wb.getSock().getInputStream()));
         new Thread(new Runnable() {
 
 

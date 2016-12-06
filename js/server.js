@@ -54,7 +54,7 @@ net.createServer(function(sock){
       if(playerWaiting == undefined || playerWaiting.destroyed){
         console.log("Waiting to be paired");
         playerWaiting = sock;
-      }else{
+      }else if(playerWaiting != sock){
         console.log("paired with partner");
         sock.partner = playerWaiting;
         playerWaiting.partner = sock;
