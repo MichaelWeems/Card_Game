@@ -1,6 +1,12 @@
 package com.se339.communication;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.net.ServerSocket;
+import com.badlogic.gdx.net.ServerSocketHints;
+import com.badlogic.gdx.net.Socket;
+import com.badlogic.gdx.net.SocketHints;
 import com.se339.log.Log;
 import com.se339.pixel_hockey.PixelHockeyGame;
 import com.se339.pixel_hockey.screens.GameScreen;
@@ -9,7 +15,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.Socket;
 import java.net.UnknownHostException;
 
 /**
@@ -17,7 +22,8 @@ import java.net.UnknownHostException;
  */
 
 public class WebSocket {
-    private Socket socket = null;
+    private ServerSocket socket = null;
+    private Socket sock;
     private PrintWriter out = null;
     private BufferedReader in = null;
     private Log l;
@@ -41,10 +47,18 @@ public class WebSocket {
 //        String ip = "localhost";
         int port = 8000;
         System.out.println("[Connecting to socket...]");
-        this.socket = new Socket(ip, port);
-        out = new PrintWriter(socket.getOutputStream(), true);
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        ServerSocketHints hint = new ServerSocketHints();
+        hint.acceptTimeout = 60;
 
+        this.socket = Gdx.net.newServerSocket(Net.Protocol.TCP, 8000, hint);//new Socket(ip, port);
+        sock = socket.accept(null);
+        out = new PrintWriter(sock.getOutputStream(), true);
+//        in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+
+    }
+
+    public Socket getSock(){
+        return sock;
     }
 
     public void joinGame(){
@@ -52,9 +66,9 @@ public class WebSocket {
         out.println("joinGame&");
     }
 
-    public String read() throws IOException{
-        return  in.readLine();
-    }
+//    public String read() throws IOException{
+//        return  in.readLine();
+//    }
 
     public void searchResponse(PixelHockeyGame game){
         try{
