@@ -17,6 +17,7 @@ public class ServerListener {
     private int port;
     private String host;
     private PixelHockeyGame game;
+    private GameScreen screen;
 
     private Log log;
 
@@ -25,6 +26,7 @@ public class ServerListener {
         host = "192.168.1.107";
 
         this.game = game;
+        this.screen = null;
 
         log = new Log("ServerListener");
 
@@ -47,10 +49,8 @@ public class ServerListener {
                             Scanner scan = new Scanner(game.getSocket().read());
                             float x = -scan.nextInt();
                             float y = -scan.nextInt();
+                            
                             Vector2 v = new Vector2(x,y);
-
-
-                            Vector2 v = new Vector2(0f,0f);
                             callback_VelocityChange(v);
                         }
 
@@ -62,11 +62,15 @@ public class ServerListener {
         }).start();
     }
 
+    public void setScreen(GameScreen screen){
+        this.screen = screen;
+    }
+
     public void callback_GoalScored(){
-        game.getGameValues().goalScored();
+        screen.getGameValues().goalScored();
     }
 
     public void callback_VelocityChange(Vector2 v){
-        game.getGameValues().updateVelocity(v);
+        screen.getGameValues().updateVelocity(v);
     }
 }

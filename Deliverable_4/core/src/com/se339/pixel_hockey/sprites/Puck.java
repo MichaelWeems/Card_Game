@@ -172,13 +172,6 @@ public class Puck extends Sprites {
         setVelocity(0, 5f);
         //log.g(body.getPosition().x, body.getPosition().y, "Stick X", "Stick Y", "New Stick Position");
     }
-/*
-    public void applyFriction(){
-        body.getLinearVelocity()
-        if ()
-        applyForce();
-    }
-    */
 
     public void update(float dt){
         super.update(dt);

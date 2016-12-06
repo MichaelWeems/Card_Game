@@ -92,9 +92,11 @@ public class GameScreen extends Screens {
         sprites.add(player);
         sprites.add(puck);
         sprites.add(usergoal);
+        sprites.add(oppgoal);
 
         Gdx.input.setInputProcessor(new InputHandler(this));
         gvalues = new GameValues(game, this);
+        game.setSLScreen(this);
 
     }
 
@@ -184,6 +186,10 @@ public class GameScreen extends Screens {
 
     public void endGame(String outcome){
         game.setScreen(new StatScreen(game, outcome));
+    }
+
+    public GameValues getGameValues(){
+        return gvalues;
     }
 
 

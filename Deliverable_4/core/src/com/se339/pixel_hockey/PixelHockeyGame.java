@@ -10,7 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.se339.communication.GameValues;
 import com.se339.communication.ServerListener;
 import com.se339.communication.WebSocket;
+import com.se339.pixel_hockey.screens.GameScreen;
 import com.se339.pixel_hockey.screens.MainMenuScreen;
+import com.se339.pixel_hockey.screens.Screens;
 
 public class PixelHockeyGame extends Game {
 
@@ -58,4 +60,8 @@ public class PixelHockeyGame extends Game {
     }
 
     public int getWinningScore(){ return winningscore; }
+
+    public void setSLScreen(GameScreen screen){
+        sl.setScreen(screen);
+    }
 }
