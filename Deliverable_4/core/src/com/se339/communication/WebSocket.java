@@ -64,7 +64,13 @@ public class WebSocket {
 
     public void joinGame(){
         //Print 'Searching for player'
-        out.println("joinGame&");
+        try{
+            sock.getOutputStream().write("joinGame&".getBytes());
+        }catch(IOException e ){
+            e.printStackTrace();
+        }
+
+//        out.println("joinGame&");
     }
 
 //    public String read() throws IOException{
